@@ -36,17 +36,11 @@ def round_hour(dt):
 
 def _parse_datetime(s):
     """Parse dates in the format returned by the Github API."""
-    if s:
-        return datetime.strptime(s, ISO8601)
-    else:
-        return datetime.fromtimestamp(0)
+    return datetime.strptime(s, ISO8601) if s else datetime.fromtimestamp(0)
 
 def issues2dict(issues):
     """Convert a list of issues to a dict, keyed by issue number."""
-    idict = {}
-    for i in issues:
-        idict[i['number']] = i
-    return idict
+    return {i['number']: i for i in issues}
 
 def split_pulls(all_issues, project="ipython/ipython"):
     """split a list of closed issues into non-PR Issues and Pull Requests"""
@@ -112,10 +106,10 @@ if __name__ == "__main__":
     print("DEPRECATE: backport_pr.py is deprecated and it is now recommended"
           "to install `ghpro` from PyPI.", file=sys.stderr)
 
-    
+
     # Whether to add reST urls for all issues in printout.
     show_urls = True
-    
+
     parser = ArgumentParser()
     parser.add_argument('--since-tag', type=str,
         help="The git tag to use for the starting point (typically the last major release)."
@@ -132,10 +126,10 @@ if __name__ == "__main__":
     parser.add_argument('--links', action='store_true', default=False,
         help="Include links to all closed Issues and PRs in the output."
     )
-    
+
     opts = parser.parse_args()
     tag = opts.since_tag
-    
+
     # set `since` from days or git tag
     if opts.days:
         since = datetime.utcnow() - timedelta(days=opts.days)
@@ -152,13 +146,16 @@ if __name__ == "__main__":
             since += td
         else:
             since -= td
-    
+
     since = round_hour(since)
-    
+
     milestone = opts.milestone
     project = opts.project
 
-    print("fetching GitHub stats since %s (tag: %s, milestone: %s)" % (since, tag, milestone), file=sys.stderr)
+    print(
+        f"fetching GitHub stats since {since} (tag: {tag}, milestone: {milestone})",
+        file=sys.stderr,
+    )
     if milestone:
         milestone_id = get_milestone_id(project=project, milestone=milestone,
                 auth=True)
@@ -171,35 +168,35 @@ if __name__ == "__main__":
     else:
         issues = issues_closed_since(since, project=project, pulls=False)
         pulls = issues_closed_since(since, project=project, pulls=True)
-    
+
     # For regular reports, it's nice to show them in reverse chronological order
     issues = sorted_by_field(issues, reverse=True)
     pulls = sorted_by_field(pulls, reverse=True)
-    
+
     n_issues, n_pulls = map(len, (issues, pulls))
     n_total = n_issues + n_pulls
-    
+
     # Print summary report we can directly include into release notes.
-    
+
     print()
     since_day = since.strftime("%Y/%m/%d")
-    today = datetime.today().strftime("%Y/%m/%d")
-    print("GitHub stats for %s - %s (tag: %s)" % (since_day, today, tag))
+    today = datetime.now().strftime("%Y/%m/%d")
+    print(f"GitHub stats for {since_day} - {today} (tag: {tag})")
     print()
     print("These lists are automatically generated, and may be incomplete or contain duplicates.")
     print()
-    
+
     ncommits = 0
     all_authors = []
     if tag:
         # print git info, in addition to GitHub info:
-        since_tag = tag+'..'
+        since_tag = f'{tag}..'
         cmd = ['git', 'log', '--oneline', since_tag]
         ncommits += len(check_output(cmd).splitlines())
-        
+
         author_cmd = ['git', 'log', '--use-mailmap', "--format=* %aN", since_tag]
         all_authors.extend(check_output(author_cmd).decode('utf-8', 'replace').splitlines())
-    
+
     pr_authors = []
     for pr in pulls:
         pr_authors.extend(get_authors(pr))
@@ -213,12 +210,12 @@ if __name__ == "__main__":
     if milestone:
         print("The full list can be seen `on GitHub <https://github.com/{project}/issues?q=milestone%3A{milestone}>`__".format(project=project,milestone=milestone)
         )
-    
+
     print()
     print("The following %i authors contributed %i commits." % (len(unique_authors), ncommits))
     print()
     print('\n'.join(unique_authors))
-    
+
     if opts.links:
         print()
         print("GitHub issues and pull requests:")

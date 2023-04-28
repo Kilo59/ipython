@@ -18,15 +18,13 @@ indent = lambda text,n: textwrap.indent(text,n*' ')
 def interesting_default_value(dv):
     if (dv is None) or (dv is Undefined):
         return False
-    if isinstance(dv, (str, list, tuple, dict, set)):
-        return bool(dv)
-    return True
+    return bool(dv) if isinstance(dv, (str, list, tuple, dict, set)) else True
 
 def format_aliases(aliases):
     fmted = []
     for a in aliases:
         dashes = '-' if len(a) == 1 else '--'
-        fmted.append('``%s%s``' % (dashes, a))
+        fmted.append(f'``{dashes}{a}``')
     return ', '.join(fmted)
 
 def class_config_rst_doc(cls, trait_aliases):
@@ -39,10 +37,8 @@ def class_config_rst_doc(cls, trait_aliases):
     for k, trait in sorted(cls.class_traits(config=True).items()):
         ttype = trait.__class__.__name__
 
-        fullname = classname + '.' + trait.name
-        lines += ['.. configtrait:: ' + fullname,
-                  ''
-                 ]
+        fullname = f'{classname}.{trait.name}'
+        lines += [f'.. configtrait:: {fullname}', '']
 
         help = trait.help.rstrip() or 'No description'
         lines.append(indent(inspect.cleandoc(help), 4) + '\n')
@@ -53,7 +49,7 @@ def class_config_rst_doc(cls, trait_aliases):
             lines.append(indent(
                 ':options: ' + ', '.join('``%r``' % x for x in trait.values), 4))
         else:
-            lines.append(indent(':trait type: ' + ttype, 4))
+            lines.append(indent(f':trait type: {ttype}', 4))
 
         # Default value
         # Ignore boring default values like None, [] or ''
@@ -64,15 +60,15 @@ def class_config_rst_doc(cls, trait_aliases):
                 dvr = None  # ignore defaults we can't construct
             if dvr is not None:
                 if len(dvr) > 64:
-                    dvr = dvr[:61] + '...'
+                    dvr = f'{dvr[:61]}...'
                 # Double up backslashes, so they get to the rendered docs
                 dvr = dvr.replace('\\n', '\\\\n')
-                lines.append(indent(':default: ``%s``' % dvr, 4))
+                lines.append(indent(f':default: ``{dvr}``', 4))
 
         # Command line aliases
         if trait_aliases[fullname]:
             fmt_aliases = format_aliases(trait_aliases[fullname])
-            lines.append(indent(':CLI option: ' + fmt_aliases, 4))
+            lines.append(indent(f':CLI option: {fmt_aliases}', 4))
 
         # Blank line
         lines.append('')
@@ -95,15 +91,15 @@ def reverse_aliases(app):
             if len(cls_cfg) == 1:
                 traitname = list(cls_cfg)[0]
                 if cls_cfg[traitname] is True:
-                    res[classname+'.'+traitname].append(flag)
+                    res[f'{classname}.{traitname}'].append(flag)
 
     return res
 
 def write_doc(name, title, app, preamble=None):
     trait_aliases = reverse_aliases(app)
-    filename = options / (name + ".rst")
+    filename = options / f"{name}.rst"
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(".. _" + name + "_options:" + "\n\n")
+        f.write(f".. _{name}_options:" + "\n\n")
         f.write(title + "\n")
         f.write(("=" * len(title)) + "\n")
         f.write("\n")

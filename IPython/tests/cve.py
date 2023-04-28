@@ -27,7 +27,7 @@ def test_cve_2022_21699():
 
     dangerous_startup_dir = dangerous_profile_dir / "startup"
     dangerous_expected = "CVE-2022-21699-" + "".join(
-        [random.choice(string.ascii_letters) for i in range(10)]
+        [random.choice(string.ascii_letters) for _ in range(10)]
     )
 
     with TemporaryWorkingDirectory() as t:

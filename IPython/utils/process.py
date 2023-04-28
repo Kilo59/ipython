@@ -46,7 +46,7 @@ def find_cmd(cmd):
     """
     path = shutil.which(cmd)
     if path is None:
-        raise FindCmdError('command could not be found: %s' % cmd)
+        raise FindCmdError(f'command could not be found: {cmd}')
     return path
 
 

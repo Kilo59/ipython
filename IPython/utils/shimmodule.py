@@ -32,7 +32,7 @@ class ShimImporter(importlib.abc.MetaPathFinder):
         return self.mirror + fullname[len(self.src) :]
 
     def find_spec(self, fullname, path, target=None):
-        if fullname.startswith(self.src + "."):
+        if fullname.startswith(f"{self.src}."):
             mirror_name = self._mirror_name(fullname)
             return importlib.util.find_spec(mirror_name)
 
@@ -74,7 +74,7 @@ class ShimModule(types.ModuleType):
 
     def __getattr__(self, key):
         # Use the equivalent of import_item(name), see below
-        name = "%s.%s" % (self._mirror, key)
+        name = f"{self._mirror}.{key}"
         try:
             return import_item(name)
         except ImportError as e:

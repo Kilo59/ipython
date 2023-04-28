@@ -13,5 +13,5 @@ class Sentinel(object):
 
 
     def __repr__(self):
-        return str(self.module)+'.'+self.name
+        return f'{str(self.module)}.{self.name}'
 

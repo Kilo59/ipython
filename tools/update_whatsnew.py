@@ -43,7 +43,7 @@ for path in files:
         try:
             content = f.read().rstrip()
         except Exception as e:
-            raise Exception('Error reading "{}"'.format(f)) from e
+            raise Exception(f'Error reading "{f}"') from e
 
     if path.name.startswith("incompat-"):
         incompats.append(content)

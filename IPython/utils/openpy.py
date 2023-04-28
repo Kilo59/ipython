@@ -24,10 +24,7 @@ def source_to_unicode(txt, errors='replace', skip_encoding_cookie=True):
     """
     if isinstance(txt, str):
         return txt
-    if isinstance(txt, bytes):
-        buffer = BytesIO(txt)
-    else:
-        buffer = txt
+    buffer = BytesIO(txt) if isinstance(txt, bytes) else txt
     try:
         encoding, _ = detect_encoding(buffer.readline)
     except SyntaxError:
@@ -54,9 +51,8 @@ def strip_encoding_cookie(filelike):
             yield second
     except StopIteration:
         return
-    
-    for line in it:
-        yield line
+
+    yield from it
 
 def read_py_file(filename, skip_encoding_cookie=True):
     """Read a Python file, using the encoding declared inside the file.
@@ -75,10 +71,7 @@ def read_py_file(filename, skip_encoding_cookie=True):
     """
     filepath = Path(filename)
     with open(filepath) as f:  # the open function defined in this module.
-        if skip_encoding_cookie:
-            return "".join(strip_encoding_cookie(f))
-        else:
-            return f.read()
+        return "".join(strip_encoding_cookie(f)) if skip_encoding_cookie else f.read()
 
 def read_py_url(url, errors='replace', skip_encoding_cookie=True):
     """Read a Python file from a URL, using the encoding declared inside the file.

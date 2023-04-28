@@ -2,13 +2,14 @@
 """Simple script to create a tarball with proper git info.
 """
 
+
 import subprocess
 
 from toollib import cd, sh
 
 tag = subprocess.check_output('git describe --tags', shell=True).decode('utf8', 'replace').strip()
-base_name = 'ipython-%s' % tag
-tar_name = '%s.tgz' % base_name
+base_name = f'ipython-{tag}'
+tar_name = f'{base_name}.tgz'
 
 # git archive is weird:  Even if I give it a specific path, it still won't
 # archive the whole tree.  It seems the only way to get the whole tree is to cd

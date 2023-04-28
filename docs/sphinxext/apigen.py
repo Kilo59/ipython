@@ -52,13 +52,17 @@ class FuncClsScanner(ast.NodeVisitor):
         self.generic_visit(node)
     
     def visit_FunctionDef(self, node):
-        if not (node.name.startswith('_') or self.has_undoc_decorator(node)) \
-                and node.name not in self.functions:
+        if (
+            not node.name.startswith('_')
+            and not self.has_undoc_decorator(node)
+            and node.name not in self.functions
+        ):
             self.functions.append(node.name)
     
     def visit_ClassDef(self, node):
         if (
-            not (node.name.startswith("_") or self.has_undoc_decorator(node))
+            not node.name.startswith("_")
+            and not self.has_undoc_decorator(node)
             and node.name not in self.classes_seen
         ):
             cls = Obj(name=node.name, sphinx_options={})
@@ -188,7 +192,7 @@ class ApiDocWriter(object):
         path = path.replace(self.package_name + os.path.sep, '')
         path = os.path.join(self.root_path, path)
         # XXX maybe check for extensions as well?
-        if os.path.exists(path + '.py'): # file
+        if os.path.exists(f'{path}.py'): # file
             path += '.py'
         elif os.path.exists(os.path.join(path, '__init__.py')):
             path = os.path.join(path, '__init__.py')
@@ -216,7 +220,7 @@ class ApiDocWriter(object):
     def _import_funcs_classes(self, uri):
         """Import * from uri, and separate out functions and classes."""
         ns = {}
-        exec('from %s import *' % uri, ns)
+        exec(f'from {uri} import *', ns)
         funcs, classes = [], []
         for name, obj in ns.items():
             if inspect.isclass(obj):
@@ -268,18 +272,18 @@ class ApiDocWriter(object):
         # Set the chapter title to read 'Module:' for all modules except for the
         # main packages
         if '.' in uri:
-            chap_title = 'Module: :mod:`' + uri_short + '`'
+            chap_title = f'Module: :mod:`{uri_short}`'
         else:
-            chap_title = ':mod:`' + uri_short + '`'
+            chap_title = f':mod:`{uri_short}`'
         ad += chap_title + '\n' + self.rst_section_levels[1] * len(chap_title)
 
         ad += '\n.. automodule:: ' + uri + '\n'
         ad += '\n.. currentmodule:: ' + uri + '\n'
-        
+
         if classes:
             subhead = str(len(classes)) + (' Classes' if len(classes) > 1 else ' Class')
             ad += '\n'+ subhead + '\n' + \
-                  self.rst_section_levels[2] * len(subhead) + '\n'
+                      self.rst_section_levels[2] * len(subhead) + '\n'
 
         for c in classes:
             opts = c.sphinx_options
@@ -296,11 +300,11 @@ class ApiDocWriter(object):
                 ad += f"  :inherited-members:{exclusions}\n"
             if c.has_init:
                   ad += '\n  .. automethod:: __init__\n'
-        
+
         if functions:
             subhead = str(len(functions)) + (' Functions' if len(functions) > 1 else ' Function')
             ad += '\n'+ subhead + '\n' + \
-                  self.rst_section_levels[2] * len(subhead) + '\n'
+                      self.rst_section_levels[2] * len(subhead) + '\n'
         for f in functions:
             # must NOT exclude from index to keep cross-refs working
             ad += '\n.. autofunction:: ' + uri + '.' + f + '\n\n'
@@ -332,8 +336,7 @@ class ApiDocWriter(object):
         elif match_type == 'package':
             patterns = self.package_skip_patterns
         else:
-            raise ValueError('Cannot interpret match type "%s"'
-                             % match_type)
+            raise ValueError(f'Cannot interpret match type "{match_type}"')
         # Match to URI without package name
         L = len(self.package_name)
         if matchstr[:L] == self.package_name:

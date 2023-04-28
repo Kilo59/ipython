@@ -45,10 +45,7 @@ if sys.platform == 'win32':
 
         buf = ctypes.create_unicode_buffer(260)
         rv = _GetLongPathName(path, buf, 260)
-        if rv == 0 or rv > 260:
-            return path
-        else:
-            return buf.value
+        return path if rv == 0 or rv > 260 else buf.value
 else:
     def _get_long_path_name(path):
         """Dummy no-op."""
@@ -70,7 +67,7 @@ def compress_user(path):
     """
     home = os.path.expanduser('~')
     if path.startswith(home):
-        path =  "~" + path[len(home):]
+        path = f"~{path[len(home):]}"
     return path
 
 def get_py_filename(name):
@@ -84,7 +81,7 @@ def get_py_filename(name):
     if os.path.isfile(name):
         return name
     if not name.endswith(".py"):
-        py_name = name + ".py"
+        py_name = f"{name}.py"
         if os.path.isfile(py_name):
             return py_name
     raise IOError("File `%r` not found." % name)
@@ -189,12 +186,12 @@ def get_home_dir(require_writable=False) -> str:
         except:
             pass
 
-    if (not require_writable) or _writable_dir(homedir):
-        assert isinstance(homedir, str), "Homedir should be unicode not bytes"
-        return homedir
-    else:
-        raise HomeDirError('%s is not a writable dir, '
-                'set $HOME environment variable to override' % homedir)
+    if require_writable and not _writable_dir(homedir):
+        raise HomeDirError(
+            f'{homedir} is not a writable dir, set $HOME environment variable to override'
+        )
+    assert isinstance(homedir, str), "Homedir should be unicode not bytes"
+    return homedir
 
 def get_xdg_dir():
     """Return the XDG_CONFIG_HOME, if it is defined and exists, else None.

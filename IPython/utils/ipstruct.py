@@ -81,8 +81,7 @@ class Struct(dict):
         this is not allowed
         """
         if not self._allownew and key not in self:
-            raise KeyError(
-                "can't create new attribute %s when allow_new_attr(False)" % key)
+            raise KeyError(f"can't create new attribute {key} when allow_new_attr(False)")
         dict.__setitem__(self, key, value)
 
     def __setattr__(self, key, value):
@@ -105,15 +104,8 @@ class Struct(dict):
         you can't set a class member
         """
         # If key is an str it might be a class member or instance var
-        if isinstance(key, str):
-            # I can't simply call hasattr here because it calls getattr, which
-            # calls self.__getattr__, which returns True for keys in
-            # self._data.  But I only want keys in the class and in
-            # self.__dict__
-            if key in self.__dict__ or hasattr(Struct, key):
-                raise AttributeError(
-                    'attr %s is a protected member of class Struct.' % key
-                )
+        if isinstance(key, str) and (key in self.__dict__ or hasattr(Struct, key)):
+            raise AttributeError(f'attr {key} is a protected member of class Struct.')
         try:
             self.__setitem__(key, value)
         except KeyError as e:
@@ -353,7 +345,7 @@ class Struct(dict):
         update   = lambda old,new: new
         add      = lambda old,new: old + new
         add_flip = lambda old,new: new + old  # note change of order!
-        add_s    = lambda old,new: old + ' ' + new
+        add_s = lambda old,new: f'{old} {new}'
 
         # default policy is to keep current keys when there's a conflict
         conflict_solve = dict.fromkeys(self, preserve)

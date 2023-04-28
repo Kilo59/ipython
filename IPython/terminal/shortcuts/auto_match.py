@@ -56,8 +56,8 @@ def raw_string_parenthesis(event: KeyPressEvent):
         r".*(r|R)[\"'](-*)",
         event.current_buffer.document.current_line_before_cursor,
     )
-    dashes = matches.group(2) if matches else ""
-    event.current_buffer.insert_text("()" + dashes)
+    dashes = matches[2] if matches else ""
+    event.current_buffer.insert_text(f"(){dashes}")
     event.current_buffer.cursor_left(len(dashes) + 1)
 
 
@@ -67,8 +67,8 @@ def raw_string_bracket(event: KeyPressEvent):
         r".*(r|R)[\"'](-*)",
         event.current_buffer.document.current_line_before_cursor,
     )
-    dashes = matches.group(2) if matches else ""
-    event.current_buffer.insert_text("[]" + dashes)
+    dashes = matches[2] if matches else ""
+    event.current_buffer.insert_text(f"[]{dashes}")
     event.current_buffer.cursor_left(len(dashes) + 1)
 
 
@@ -78,7 +78,7 @@ def raw_string_braces(event: KeyPressEvent):
         r".*(r|R)[\"'](-*)",
         event.current_buffer.document.current_line_before_cursor,
     )
-    dashes = matches.group(2) if matches else ""
+    dashes = matches[2] if matches else ""
     event.current_buffer.insert_text("{}" + dashes)
     event.current_buffer.cursor_left(len(dashes) + 1)
 

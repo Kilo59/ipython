@@ -106,10 +106,7 @@ def loaded_api():
     elif sys.modules.get("PySide2.QtCore"):
         return QT_API_PYSIDE2
     elif sys.modules.get("PyQt4.QtCore"):
-        if qtapi_version() == 2:
-            return QT_API_PYQT
-        else:
-            return QT_API_PYQTv1
+        return QT_API_PYQT if qtapi_version() == 2 else QT_API_PYQTv1
     elif sys.modules.get("PySide.QtCore"):
         return QT_API_PYSIDE
 
@@ -138,7 +135,7 @@ def has_binding(api):
 
     for submod in required:
         try:
-            spec = find_spec('%s.%s' % (module_name, submod))
+            spec = find_spec(f'{module_name}.{submod}')
         except ImportError:
             # Package (e.g. PyQt5) not found
             return False
@@ -213,8 +210,9 @@ def import_pyqt4(version=2):
     from PyQt4 import QtGui, QtCore, QtSvg
 
     if QtCore.PYQT_VERSION < 0x040700:
-        raise ImportError("IPython requires PyQt4 >= 4.7, found %s" %
-                          QtCore.PYQT_VERSION_STR)
+        raise ImportError(
+            f"IPython requires PyQt4 >= 4.7, found {QtCore.PYQT_VERSION_STR}"
+        )
 
     # Alias PyQt-specific functions for PySide compatibility.
     QtCore.Signal = QtCore.pyqtSignal
@@ -354,11 +352,11 @@ def load_qt(api_options):
     }
 
     for api in api_options:
-
         if api not in loaders:
             raise RuntimeError(
-                "Invalid Qt API %r, valid values are: %s" %
-                (api, ", ".join(["%r" % k for k in loaders.keys()])))
+                "Invalid Qt API %r, valid values are: %s"
+                % (api, ", ".join(["%r" % k for k in loaders]))
+            )
 
         if not can_import(api):
             continue
@@ -368,13 +366,12 @@ def load_qt(api_options):
         api = result[-1]  # changed if api = QT_API_PYQT_DEFAULT
         commit_api(api)
         return result
-    else:
-        # Clear the environment variable since it doesn't work.
-        if "QT_API" in os.environ:
-            del os.environ["QT_API"]
+    # Clear the environment variable since it doesn't work.
+    if "QT_API" in os.environ:
+        del os.environ["QT_API"]
 
-        raise ImportError(
-            """
+    raise ImportError(
+        """
     Could not load requested Qt binding. Please ensure that
     PyQt4 >= 4.7, PyQt5, PyQt6, PySide >= 1.0.3, PySide2, or
     PySide6 is available, and only one is imported per session.
@@ -386,15 +383,15 @@ def load_qt(api_options):
     PySide6 installed:                                          %s
     Tried to load:                                              %r
     """
-            % (
-                loaded_api(),
-                has_binding(QT_API_PYQT5),
-                has_binding(QT_API_PYQT6),
-                has_binding(QT_API_PYSIDE2),
-                has_binding(QT_API_PYSIDE6),
-                api_options,
-            )
+        % (
+            loaded_api(),
+            has_binding(QT_API_PYQT5),
+            has_binding(QT_API_PYQT6),
+            has_binding(QT_API_PYSIDE2),
+            has_binding(QT_API_PYSIDE6),
+            api_options,
         )
+    )
 
 
 def enum_factory(QT_API, QtCore):

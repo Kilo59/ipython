@@ -29,10 +29,7 @@ class RichOutput(object):
         if mime not in self.data:
             return
         data = self.data[mime]
-        if mime in self.metadata:
-            return data, self.metadata[mime]
-        else:
-            return data
+        return (data, self.metadata[mime]) if mime in self.metadata else data
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         return self.data, self.metadata
@@ -85,16 +82,12 @@ class CapturedIO(object):
     @property
     def stdout(self):
         "Captured standard output"
-        if not self._stdout:
-            return ''
-        return self._stdout.getvalue()
+        return self._stdout.getvalue() if self._stdout else ''
 
     @property
     def stderr(self):
         "Captured standard error"
-        if not self._stderr:
-            return ''
-        return self._stderr.getvalue()
+        return self._stderr.getvalue() if self._stderr else ''
 
     @property
     def outputs(self):

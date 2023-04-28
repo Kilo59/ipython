@@ -33,9 +33,9 @@ for l in lines[prefixes_line + 1: symbols_line]:
 
 idents = []
 for l in lines[symbols_line:]:
-    if not '=>' in l: continue # if it's not a def, skip
+    if '=>' not in l: continue # if it's not a def, skip
     if '#' in l: l = l[:l.index('#')] # get rid of eol comments
-    x, y = l.strip().split('=>') 
+    x, y = l.strip().split('=>')
     if '*' in x: # if a prefix is present substitute it with its value
         p, x = x.split('*')
         x = prefix_dict[p][:-1] + x[1:]
@@ -49,7 +49,7 @@ def test_ident(i):
     """Is the unicode string valid in a Python 3 identifier."""
     # Some characters are not valid at the start of a name, but we still want to
     # include them. So prefix with 'a', which is valid at the start.
-    return ('a' + i).isidentifier()
+    return f'a{i}'.isidentifier()
 
 assert test_ident("α")
 assert not test_ident('‴')
@@ -81,7 +81,7 @@ reverse_latex_symbol = { v:k for k,v in latex_symbols.items()}
 """
 
 fn = Path("..", "IPython", "core", "latex_symbols.py")
-print("Writing the file: %s" % str(fn))
+print(f"Writing the file: {str(fn)}")
 fn.write_text(s, encoding="utf-8")
 
 

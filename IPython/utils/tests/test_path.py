@@ -162,7 +162,7 @@ def test_get_home_dir_4():
 @with_environment
 def test_get_home_dir_5():
     """raise HomeDirError if $HOME is specified, but not a writable dir"""
-    env['HOME'] = abspath(HOME_TEST_DIR+'garbage')
+    env['HOME'] = abspath(f'{HOME_TEST_DIR}garbage')
     # set os.name = posix, to prevent My Documents fallback on Windows
     os.name = 'posix'
     pytest.raises(path.HomeDirError, path.get_home_dir, True)
@@ -180,13 +180,18 @@ def test_get_home_dir_8():
     for key in ['HOME', 'HOMESHARE', 'HOMEDRIVE', 'HOMEPATH', 'USERPROFILE']:
         env.pop(key, None)
 
+
+
     class key:
         def __enter__(self):
             pass
+
         def Close(self):
             pass
-        def __exit__(*args, **kwargs):
+
+        def __exit__(self, **kwargs):
             pass
+
 
     with patch.object(wreg, 'OpenKey', return_value=key()), \
          patch.object(wreg, 'QueryValueEx', return_value=[abspath(HOME_TEST_DIR)]):

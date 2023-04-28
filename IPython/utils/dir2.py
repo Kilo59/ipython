@@ -78,7 +78,4 @@ def get_real_method(obj, name):
     if inspect.isclass(obj) and not isinstance(m, types.MethodType):
         return None
 
-    if callable(m):
-        return m
-
-    return None
+    return m if callable(m) else None

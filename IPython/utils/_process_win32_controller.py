@@ -234,7 +234,7 @@ class Win32ShellCommandController(object):
         self.piProcInfo = None
         try:
             p_hstdout, c_hstdout, p_hstderr, \
-                    c_hstderr, p_hstdin, c_hstdin = [None]*6
+                        c_hstderr, p_hstdin, c_hstdin = [None]*6
 
             # SECURITY_ATTRIBUTES with inherit handle set to True
             saAttr = SECURITY_ATTRIBUTES()
@@ -280,11 +280,18 @@ class Win32ShellCommandController(object):
             siStartInfo.dwFlags = STARTF_USESTDHANDLES
             dwCreationFlags = CREATE_SUSPENDED | CREATE_NO_WINDOW # | CREATE_NEW_CONSOLE
 
-            if not CreateProcess(None,
-                    u"cmd.exe /c " + cmd,
-                    None, None, True, dwCreationFlags,
-                    None, None, ctypes.byref(siStartInfo),
-                    ctypes.byref(piProcInfo)):
+            if not CreateProcess(
+                None,
+                f"cmd.exe /c {cmd}",
+                None,
+                None,
+                True,
+                dwCreationFlags,
+                None,
+                None,
+                ctypes.byref(siStartInfo),
+                ctypes.byref(piProcInfo),
+            ):
                 raise ctypes.WinError()
 
             # Close this process's versions of the child handles
@@ -385,7 +392,7 @@ class Win32ShellCommandController(object):
                 else:
                     raise ctypes.WinError()
             # FIXME: Python3
-            s = data.value[0:bytesRead.value]
+            s = data.value[:bytesRead.value]
             #print("\nv: %s" % repr(s), file=sys.stderr)
             func(s.decode('utf_8', 'replace'))
 
@@ -409,13 +416,15 @@ class Win32ShellCommandController(object):
 
         # Create a thread for each input/output handle
         stdin_thread = None
-        threads = []
         if stdin_func:
             stdin_thread = threading.Thread(target=self._stdin_thread,
                                 args=(self.hstdin, self.piProcInfo.hProcess,
                                 stdin_func, stdout_func))
-        threads.append(threading.Thread(target=self._stdout_thread,
-                                    args=(self.hstdout, stdout_func)))
+        threads = [
+            threading.Thread(
+                target=self._stdout_thread, args=(self.hstdout, stdout_func)
+            )
+        ]
         if not self.mergeout:
             if stderr_func is None:
                 stderr_func = stdout_func
@@ -430,7 +439,7 @@ class Win32ShellCommandController(object):
             thread.start()
         # Wait for the process to complete
         if WaitForSingleObject(self.piProcInfo.hProcess, INFINITE) == \
-                    WAIT_FAILED:
+                        WAIT_FAILED:
             raise ctypes.WinError()
         # Wait for the I/O threads to complete
         for thread in threads:
@@ -468,7 +477,7 @@ class Win32ShellCommandController(object):
             data = data.value
             data = data.replace('\r\n', '\n')
             data = data.replace('\r', '\n')
-            print(repr(data) + " ", end='')
+            print(f"{repr(data)} ", end='')
             return data
 
     def _stdin_raw_block(self):
@@ -561,7 +570,7 @@ def system(cmd):
     """
     with AvoidUNCPath() as path:
         if path is not None:
-            cmd = '"pushd %s &&"%s' % (path, cmd)
+            cmd = f'"pushd {path} &&"{cmd}'
         with Win32ShellCommandController(cmd) as scc:
             scc.run()
 

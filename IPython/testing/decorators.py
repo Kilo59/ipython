@@ -161,7 +161,9 @@ skip_if_no_x11 = skipif(_x11_skip_cond, _x11_skip_msg)
 # Other skip decorators
 
 # generic skip without module
-skip_without = lambda mod: skipif(module_not_available(mod), "This test requires %s" % mod)
+skip_without = lambda mod: skipif(
+    module_not_available(mod), f"This test requires {mod}"
+)
 
 skipif_not_numpy = skip_without('numpy')
 

@@ -26,7 +26,7 @@ if ON_RTD:
 
     # RTD doesn't use the Makefile, so re-run autogen_{things}.py here.
     for name in ("config", "api", "magics", "shortcuts"):
-        fname = Path("autogen_{}.py".format(name))
+        fname = Path(f"autogen_{name}.py")
         fpath = (Path(__file__).parent).joinpath("..", fname)
         with open(fpath, encoding="utf-8") as f:
             exec(
@@ -94,10 +94,7 @@ source_suffix = '.rst'
 rst_prolog = ''
 
 def is_stable(extra):
-    for ext in {'dev', 'b', 'rc'}:
-        if ext in extra:
-            return False
-    return True
+    return all(ext not in extra for ext in {'dev', 'b', 'rc'})
 
 if is_stable(iprelease['_version_extra']):
     tags.add('ipystable')
@@ -152,9 +149,11 @@ class ConfigtraitFilter(logging.Filter):
     """
 
     def filter(self, record):
-        if record.args and record.args[0] == 'configtrait' and 'duplicate' in record.msg:
-            return False
-        return True
+        return (
+            not record.args
+            or record.args[0] != 'configtrait'
+            or 'duplicate' not in record.msg
+        )
 
 ct_filter = ConfigtraitFilter()
 
@@ -167,7 +166,7 @@ logger.addFilter(ct_filter)
 # other places throughout the built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = "%s" % iprelease['version']
+release = f"{iprelease['version']}"
 # Just the X.Y.Z part, no '-dev'
 version = iprelease['version'].split('-', 1)[0]
 

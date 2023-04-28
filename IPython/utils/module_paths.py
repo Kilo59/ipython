@@ -59,12 +59,6 @@ def find_mod(module_name):
     spec = importlib.util.find_spec(module_name)
     module_path = spec.origin
     if module_path is None:
-        if spec.loader in sys.meta_path:
-            return spec.loader
-        return None
-    else:
-        split_path = module_path.split(".")
-        if split_path[-1] in ["py", "pyw"]:
-            return module_path
-        else:
-            return None
+        return spec.loader if spec.loader in sys.meta_path else None
+    split_path = module_path.split(".")
+    return module_path if split_path[-1] in ["py", "pyw"] else None

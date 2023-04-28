@@ -147,8 +147,9 @@ def test_skip_dt_decorator2():
     dtargs = (['x', 'y'], None, 'k', (1,))
     # Introspect out the value
     dtargsr = getargspec(doctest_bad)
-    assert dtargsr==dtargs, \
-           "Incorrectly reconstructed args for doctest_bad: %s" % (dtargsr,)
+    assert (
+        dtargsr == dtargs
+    ), f"Incorrectly reconstructed args for doctest_bad: {dtargsr}"
 
 
 @dec.skip_linux

@@ -38,7 +38,7 @@ class TestElide(unittest.TestCase):
 
         test_string = os.sep.join(["", 10 * "a", 10 * "b", 10 * "c", ""])
         expect_string = (
-            os.sep + "a" + "\N{HORIZONTAL ELLIPSIS}" + "b" + os.sep + 10 * "c"
+            f"{os.sep}a" + "\N{HORIZONTAL ELLIPSIS}" + "b" + os.sep + 10 * "c"
         )
         self.assertEqual(_elide(test_string, ""), expect_string)
 
@@ -225,7 +225,7 @@ class InteractiveShellTestCase(unittest.TestCase):
             ip.display_formatter.formatters["text/html"].enabled = False
             del ip.mime_renderers["text/html"]
 
-        assert called == True
+        assert called
 
 
 def syntax_error_transformer(lines):

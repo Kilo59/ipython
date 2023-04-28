@@ -40,16 +40,18 @@ def make_link_node(rawtext, app, type, slug, options):
         if not base.endswith('/'):
             base += '/'
     except AttributeError as err:
-        raise ValueError('github_project_url configuration value is not set (%s)' % str(err)) from err
+        raise ValueError(
+            f'github_project_url configuration value is not set ({str(err)})'
+        ) from err
 
     ref = base + type + '/' + slug + '/'
     set_classes(options)
     prefix = "#"
     if type == 'pull':
-        prefix = "PR " + prefix
-    node = nodes.reference(rawtext, prefix + utils.unescape(slug), refuri=ref,
-                           **options)
-    return node
+        prefix = f"PR {prefix}"
+    return nodes.reference(
+        rawtext, prefix + utils.unescape(slug), refuri=ref, **options
+    )
 
 def ghissue_role(name, rawtext, text, lineno, inliner, options=None, content=None):
     """Link to a GitHub issue.
@@ -114,7 +116,7 @@ def ghuser_role(name, rawtext, text, lineno, inliner, options=None, content=None
 
     app = inliner.document.settings.env.app
     #info('user link %r' % text)
-    ref = 'https://www.github.com/' + text
+    ref = f'https://www.github.com/{text}'
     node = nodes.reference(rawtext, text, refuri=ref, **options)
     return [node], []
 
@@ -145,7 +147,9 @@ def ghcommit_role(name, rawtext, text, lineno, inliner, options=None, content=No
         if not base.endswith('/'):
             base += '/'
     except AttributeError as err:
-        raise ValueError('github_project_url configuration value is not set (%s)' % str(err)) from err
+        raise ValueError(
+            f'github_project_url configuration value is not set ({str(err)})'
+        ) from err
 
     ref = base + text
     node = nodes.reference(rawtext, text[:6], refuri=ref, **options)
@@ -164,5 +168,4 @@ def setup(app):
     app.add_role('ghcommit', ghcommit_role)
     app.add_config_value('github_project_url', None, 'env')
 
-    metadata = {'parallel_read_safe': True, 'parallel_write_safe': True}
-    return metadata
+    return {'parallel_read_safe': True, 'parallel_write_safe': True}

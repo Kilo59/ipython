@@ -148,7 +148,7 @@ def not_inside_unclosed_string():
     s = re.sub(r"(?:\"\"\"[\s\S]*\"\"\"|'''[\s\S]*''')", "", s)
     # remove single-quoted string literals
     s = re.sub(r"""(?:"[^"]*["\n]|'[^']*['\n])""", "", s)
-    return not ('"' in s or "'" in s)
+    return '"' not in s and "'" not in s
 
 
 @Condition
@@ -251,26 +251,23 @@ def eval_node(node: Union[ast.AST, None]):
     if isinstance(node, ast.BinOp):
         left = eval_node(node.left)
         right = eval_node(node.right)
-        dunders = _find_dunder(node.op, BINARY_OP_DUNDERS)
-        if dunders:
+        if dunders := _find_dunder(node.op, BINARY_OP_DUNDERS):
             return getattr(left, dunders[0])(right)
         raise ValueError(f"Unknown binary operation: {node.op}")
     if isinstance(node, ast.UnaryOp):
         value = eval_node(node.operand)
-        dunders = _find_dunder(node.op, UNARY_OP_DUNDERS)
-        if dunders:
+        if dunders := _find_dunder(node.op, UNARY_OP_DUNDERS):
             return getattr(value, dunders[0])()
         raise ValueError(f"Unknown unary operation: {node.op}")
     if isinstance(node, ast.Name):
         if node.id in KEYBINDING_FILTERS:
             return KEYBINDING_FILTERS[node.id]
-        else:
-            sep = "\n  - "
-            known_filters = sep.join(sorted(KEYBINDING_FILTERS))
-            raise NameError(
-                f"{node.id} is not a known shortcut filter."
-                f" Known filters are: {sep}{known_filters}."
-            )
+        sep = "\n  - "
+        known_filters = sep.join(sorted(KEYBINDING_FILTERS))
+        raise NameError(
+            f"{node.id} is not a known shortcut filter."
+            f" Known filters are: {sep}{known_filters}."
+        )
     raise ValueError("Unhandled node", ast.dump(node))
 
 

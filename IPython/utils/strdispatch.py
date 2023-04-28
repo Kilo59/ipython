@@ -47,12 +47,9 @@ class StrDispatch(object):
         for r, obj in self.regexs.items():
             if re.match(r, key):
                 yield obj
-            else:
-                #print "nomatch",key  # dbg
-                pass
 
     def __repr__(self):
-        return "<Strdispatch %s, %s>" % (self.strs, self.regexs)
+        return f"<Strdispatch {self.strs}, {self.regexs}>"
 
     def s_matches(self, key):
         if key not in self.strs:

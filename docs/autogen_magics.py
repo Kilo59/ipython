@@ -9,10 +9,7 @@ magics = shell.magics_manager.magics
 
 def _strip_underline(line):
     chars = set(line.strip())
-    if len(chars) == 1 and ("-" in chars or "=" in chars):
-        return ""
-    else:
-        return line
+    return "" if len(chars) == 1 and ("-" in chars or "=" in chars) else line
 
 def format_docstring(func):
     docstring = (func.__doc__ or "Undocumented").rstrip()
@@ -32,14 +29,11 @@ output = [
 def sortkey(s): return s[0].lower()
 
 for name, func in sorted(magics["line"].items(), key=sortkey):
-    if isinstance(func, Alias) or isinstance(func, MagicAlias):
+    if isinstance(func, (Alias, MagicAlias)):
         # Aliases are magics, but shouldn't be documented here
         # Also skip aliases to other magics
         continue
-    output.extend([".. magic:: {}".format(name),
-                   "",
-                   format_docstring(func),
-                   ""])
+    output.extend([f".. magic:: {name}", "", format_docstring(func), ""])
 
 output.extend([
 "Cell magics",
@@ -56,10 +50,7 @@ for name, func in sorted(magics["cell"].items(), key=sortkey):
         continue
     if isinstance(func, MagicAlias):
         continue
-    output.extend([".. cellmagic:: {}".format(name),
-                   "",
-                   format_docstring(func),
-                   ""])
+    output.extend([f".. cellmagic:: {name}", "", format_docstring(func), ""])
 
 src_path = Path(__file__).parent
 dest = src_path.joinpath("source", "interactive", "magics-generated.txt")

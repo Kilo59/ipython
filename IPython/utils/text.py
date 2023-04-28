@@ -8,6 +8,7 @@ Inheritance diagram:
    :parts: 3
 """
 
+
 import os
 import re
 import string
@@ -18,10 +19,7 @@ from pathlib import Path
 
 
 # datetime.strftime date format for ipython
-if sys.platform == 'win32':
-    date_format = "%B %d, %Y"
-else:
-    date_format = "%B %-d, %Y"
+date_format = "%B %d, %Y" if sys.platform == 'win32' else "%B %-d, %Y"
 
 class LSString(str):
     """String derivative with a special access attributes.
@@ -159,10 +157,11 @@ class SList(list):
             pred = lambda x : re.search(pattern, x, re.IGNORECASE)
         else:
             pred = pattern
-        if not prune:
-            return SList([el for el in self if pred(match_target(el))])
-        else:
-            return SList([el for el in self if not pred(match_target(el))])
+        return (
+            SList([el for el in self if not pred(match_target(el))])
+            if prune
+            else SList([el for el in self if pred(match_target(el))])
+        )
 
     def fields(self, *fields):
         """ Collect whitespace-separated fields from string list
@@ -183,7 +182,7 @@ class SList(list):
 
         Without args, fields() just split()'s the strings.
         """
-        if len(fields) == 0:
+        if not fields:
             return [el.split() for el in self]
 
         res = SList()
@@ -217,13 +216,13 @@ class SList(list):
         else:
             dsu = [[line,  line] for line in self]
         if nums:
-            for i in range(len(dsu)):
-                numstr = "".join([ch for ch in dsu[i][0] if ch.isdigit()])
+            for item in dsu:
+                numstr = "".join([ch for ch in item[0] if ch.isdigit()])
                 try:
                     n = int(numstr)
                 except ValueError:
                     n = 0
-                dsu[i][0] = n
+                item[0] = n
 
 
         dsu.sort()
@@ -277,10 +276,7 @@ def indent(instr,nspaces=4, ntabs=0, flatten=False):
     else:
         pat = re.compile(r'^', re.MULTILINE)
     outstr = re.sub(pat, ind, instr)
-    if outstr.endswith(os.linesep+ind):
-        return outstr[:-len(ind)]
-    else:
-        return outstr
+    return outstr[:-len(ind)] if outstr.endswith(os.linesep+ind) else outstr
 
 
 def list_strings(arg):
@@ -301,10 +297,7 @@ def list_strings(arg):
         Out[9]: ['A', 'list', 'of', 'strings']
     """
 
-    if isinstance(arg, str):
-        return [arg]
-    else:
-        return arg
+    return [arg] if isinstance(arg, str) else arg
 
 
 def marquee(txt='',width=78,mark='*'):
@@ -327,9 +320,9 @@ def marquee(txt='',width=78,mark='*'):
     if not txt:
         return (mark*width)[:width]
     nmark = (width-len(txt)-2)//len(mark)//2
-    if nmark < 0: nmark =0
+    nmark = max(nmark, 0)
     marks = mark*nmark
-    return '%s %s %s' % (marks,txt,marks)
+    return f'{marks} {txt} {marks}'
 
 
 ini_spaces_re = re.compile(r'^(\s+)')
@@ -337,11 +330,7 @@ ini_spaces_re = re.compile(r'^(\s+)')
 def num_ini_spaces(strng):
     """Return the number of initial spaces in a string"""
 
-    ini_spaces = ini_spaces_re.match(strng)
-    if ini_spaces:
-        return ini_spaces.end()
-    else:
-        return 0
+    return ini_spaces.end() if (ini_spaces := ini_spaces_re.match(strng)) else 0
 
 
 def format_screen(strng):
@@ -628,10 +617,7 @@ def _find_optimal(rlist, row_first=False, separator_size=2, displaywidth=80):
 
 def _get_or_default(mylist, i, default=None):
     """return list item number, or default if don't exist"""
-    if i >= len(mylist):
-        return default
-    else :
-        return mylist[i]
+    return default if i >= len(mylist) else mylist[i]
 
 
 def compute_item_matrix(items, row_first=False, empty=None, *args, **kwargs) :

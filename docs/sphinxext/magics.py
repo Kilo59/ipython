@@ -8,8 +8,8 @@ name_re = re.compile(r"[\w_]+")
 def parse_magic(env, sig, signode):
     m = name_re.match(sig)
     if not m:
-        raise Exception("Invalid magic command: %s" % sig)
-    name = "%" + sig
+        raise Exception(f"Invalid magic command: {sig}")
+    name = f"%{sig}"
     signode += addnodes.desc_name(name, name)
     return m.group(0)
 
@@ -26,8 +26,8 @@ class LineMagicRole(XRefRole):
 def parse_cell_magic(env, sig, signode):
     m = name_re.match(sig)
     if not m:
-        raise ValueError("Invalid cell magic: %s" % sig)
-    name = "%%" + sig
+        raise ValueError(f"Invalid cell magic: {sig}")
+    name = f"%%{sig}"
     signode += addnodes.desc_name(name, name)
     return m.group(0)
 
@@ -42,5 +42,4 @@ def setup(app):
     app.add_object_type('cellmagic', 'cellmagic', 'pair: %s; cell magic', parse_cell_magic)
     app.add_role_to_domain('std', 'cellmagic', CellMagicRole(), override=True)
 
-    metadata = {'parallel_read_safe': True, 'parallel_write_safe': True}
-    return metadata
+    return {'parallel_read_safe': True, 'parallel_write_safe': True}

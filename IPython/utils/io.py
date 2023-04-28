@@ -41,7 +41,7 @@ class Tee(object):
         channel : str, one of ['stdout', 'stderr']
         """
         if channel not in ['stdout', 'stderr']:
-            raise ValueError('Invalid channel spec %s' % channel)
+            raise ValueError(f'Invalid channel spec {channel}')
 
         if hasattr(file_or_name, 'write') and hasattr(file_or_name, 'seek'):
             self.file = file_or_name
@@ -93,7 +93,7 @@ def ask_yes_no(prompt, default=None, interrupt=None):
     ans = None
     while ans not in answers.keys():
         try:
-            ans = input(prompt+' ').lower()
+            ans = input(f'{prompt} ').lower()
             if not ans:  # response was an empty string
                 ans = default
         except KeyboardInterrupt:
@@ -101,12 +101,11 @@ def ask_yes_no(prompt, default=None, interrupt=None):
                 ans = interrupt
             print("\r")
         except EOFError:
-            if default in answers.keys():
-                ans = default
-                print()
-            else:
+            if default not in answers:
                 raise
 
+            ans = default
+            print()
     return answers[ans]
 
 

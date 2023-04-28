@@ -41,7 +41,7 @@ class DocTestFinder(doctest.DocTestFinder):
     def _get_test(self, obj, name, module, globs, source_lines):
         test = super()._get_test(obj, name, module, globs, source_lines)
 
-        if bool(getattr(obj, "__skip_doctest__", False)) and test is not None:
+        if getattr(obj, "__skip_doctest__", False) and test is not None:
             for example in test.examples:
                 example.options[doctest.SKIP] = True
 
@@ -67,11 +67,7 @@ class IPDoctestOutputChecker(doctest.OutputChecker):
         # that happen to have a comment saying '#random' embedded in.
         ret = doctest.OutputChecker.check_output(self, want, got,
                                                  optionflags)
-        if not ret and self.random_re.search(want):
-            #print >> sys.stderr, 'RANDOM OK:',want  # dbg
-            return True
-
-        return ret
+        return True if not ret and self.random_re.search(want) else ret
 
 
 # A simple subclassing of the original with a different class name, so we can
@@ -127,10 +123,7 @@ class IPDocTestParser(doctest.DocTestParser):
     def ip2py(self,source):
         """Convert input IPython source into valid Python."""
         block = _ip.input_transformer_manager.transform_cell(source)
-        if len(block.splitlines()) == 1:
-            return _ip.prefilter(block)
-        else:
-            return block
+        return _ip.prefilter(block) if len(block.splitlines()) == 1 else block
 
     def parse(self, string, name='<string>'):
         """
@@ -154,11 +147,7 @@ class IPDocTestParser(doctest.DocTestParser):
 
         # We make 'all random' tests by adding the '# random' mark to every
         # block of output in the test.
-        if self._RANDOM_TEST.search(string):
-            random_marker = '\n# random'
-        else:
-            random_marker = ''
-
+        random_marker = '\n# random' if self._RANDOM_TEST.search(string) else ''
         # Whether to convert the input from ipython to python syntax
         ip2py = False
         # Find all doctest examples in the string.  First, try them as Python
@@ -180,7 +169,7 @@ class IPDocTestParser(doctest.DocTestParser):
             lineno += string.count('\n', charno, m.start())
             # Extract info from the regexp match.
             (source, options, want, exc_msg) = \
-                     self._parse_example(m, name, lineno,ip2py)
+                         self._parse_example(m, name, lineno,ip2py)
 
             # Append the random-output marker (it defaults to empty in most
             # cases, it's only non-empty for 'all-random' tests):
@@ -253,13 +242,7 @@ class IPDocTestParser(doctest.DocTestParser):
 
         want = '\n'.join([wl[indent:] for wl in want_lines])
 
-        # If `want` contains a traceback message, then extract it.
-        m = self._EXCEPTION_RE.match(want)
-        if m:
-            exc_msg = m.group('msg')
-        else:
-            exc_msg = None
-
+        exc_msg = m.group('msg') if (m := self._EXCEPTION_RE.match(want)) else None
         # Extract options from the source.
         options = self._find_options(source, name, lineno)
 

@@ -116,23 +116,21 @@ class _DummyTerminal:
 
 def bindings_from_prompt_toolkit(prompt_bindings: KeyBindingsBase) -> List[Binding]:
     """Collect bindings to a simple format that does not depend on prompt-toolkit internals"""
-    bindings: List[Binding] = []
-
-    for kb in prompt_bindings.bindings:
-        bindings.append(
-            Binding(
-                handler=Handler(
-                    description=kb.handler.__doc__ or "",
-                    identifier=create_identifier(kb.handler),
-                ),
-                shortcut=Shortcut(
-                    keys_sequence=[
-                        str(k.value) if hasattr(k, "value") else k for k in kb.keys
-                    ],
-                    filter=format_filter(kb.filter, skip={"has_focus_filter"}),
-                ),
-            )
+    bindings: List[Binding] = [
+        Binding(
+            handler=Handler(
+                description=kb.handler.__doc__ or "",
+                identifier=create_identifier(kb.handler),
+            ),
+            shortcut=Shortcut(
+                keys_sequence=[
+                    str(k.value) if hasattr(k, "value") else k for k in kb.keys
+                ],
+                filter=format_filter(kb.filter, skip={"has_focus_filter"}),
+            ),
         )
+        for kb in prompt_bindings.bindings
+    ]
     return bindings
 
 

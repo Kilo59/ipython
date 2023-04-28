@@ -15,8 +15,7 @@ Token = namedtuple('Token', ['token', 'text', 'start', 'end', 'line'])
 def generate_tokens(readline):
     """wrap generate_tokens to catch EOF errors"""
     try:
-        for token in tokenize.generate_tokens(readline):
-            yield token
+        yield from tokenize.generate_tokens(readline)
     except tokenize.TokenError:
         # catch EOF error
         return
@@ -72,12 +71,12 @@ def token_at_cursor(cell, cursor_pos=0):
     names = []
     tokens = []
     call_names = []
-    
+
     offsets = {1: 0} # lines start at 1
     for tup in generate_tokens(StringIO(cell).readline):
         
         tok = Token(*tup)
-        
+
         # token, text, start, end, line = tup
         start_line, start_col = tok.start
         end_line, end_col = tok.end
@@ -87,7 +86,7 @@ def token_at_cursor(cell, cursor_pos=0):
             for lineno, line in enumerate(lines, start_line + 1):
                 if lineno not in offsets:
                     offsets[lineno] = offsets[lineno-1] + len(line)
-        
+
         offset = offsets[start_line]
         # allow '|foo' to find 'foo' at the beginning of a line
         boundary = cursor_pos + 1 if start_col == 0 else cursor_pos
@@ -95,10 +94,10 @@ def token_at_cursor(cell, cursor_pos=0):
             # current token starts after the cursor,
             # don't consume it
             break
-        
+
         if tok.token == tokenize.NAME and not iskeyword(tok.text):
             if names and tokens and tokens[-1].token == tokenize.OP and tokens[-1].text == '.':
-                names[-1] = "%s.%s" % (names[-1], tok.text)
+                names[-1] = f"{names[-1]}.{tok.text}"
             else:
                 names.append(tok.text)
         elif tok.token == tokenize.OP:
@@ -110,13 +109,13 @@ def token_at_cursor(cell, cursor_pos=0):
                 call_names.append(names[-1])
             elif tok.text == ')' and call_names:
                 call_names.pop(-1)
-        
+
         tokens.append(tok)
-        
+
         if offsets[end_line] + end_col > cursor_pos:
             # we found the cursor, stop reading
             break
-        
+
     if call_names:
         return call_names[-1]
     elif names:

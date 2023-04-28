@@ -103,7 +103,7 @@ class SubProcessTestCase(tt.TempFileMixin):
         self.assertEqual(status, 0)
 
     def test_system_quotes(self):
-        status = system('%s -c "import sys"' % python)
+        status = system(f'{python} -c "import sys"')
         self.assertEqual(status, 0)
 
     def assert_interrupts(self, command):
@@ -131,9 +131,7 @@ class SubProcessTestCase(tt.TempFileMixin):
             # Success!
             pass
         end = time.time()
-        self.assertTrue(
-            end - start < 2, "Process didn't die quickly: %s" % (end - start)
-        )
+        self.assertTrue(end - start < 2, f"Process didn't die quickly: {end - start}")
         return result
 
     def test_system_interrupt(self):
@@ -142,7 +140,7 @@ class SubProcessTestCase(tt.TempFileMixin):
         subprocess is interrupted.
         """
         def command():
-            return system('%s -c "import time; time.sleep(5)"' % python)
+            return system(f'{python} -c "import time; time.sleep(5)"')
 
         status = self.assert_interrupts(command)
         self.assertNotEqual(
@@ -158,13 +156,13 @@ class SubProcessTestCase(tt.TempFileMixin):
             self.assertEqual(out, 'on stdouton stderr')
 
     def test_getoutput_quoted(self):
-        out = getoutput('%s -c "print (1)"' % python)
+        out = getoutput(f'{python} -c "print (1)"')
         self.assertEqual(out.strip(), '1')
 
     #Invalid quoting on windows
     @dec.skip_win32
     def test_getoutput_quoted2(self):
-        out = getoutput("%s -c 'print (1)'" % python)
+        out = getoutput(f"{python} -c 'print (1)'")
         self.assertEqual(out.strip(), '1')
         out = getoutput("%s -c 'print (\"1\")'" % python)
         self.assertEqual(out.strip(), '1')
@@ -175,7 +173,7 @@ class SubProcessTestCase(tt.TempFileMixin):
         self.assertEqual(err, 'on stderr')
 
     def test_get_output_error_code(self):
-        quiet_exit = '%s -c "import sys; sys.exit(1)"' % python
+        quiet_exit = f'{python} -c "import sys; sys.exit(1)"'
         out, err, code = get_output_error_code(quiet_exit)
         self.assertEqual(out, '')
         self.assertEqual(err, '')

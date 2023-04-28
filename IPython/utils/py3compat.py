@@ -20,9 +20,7 @@ def encode(u, encoding=None):
 
 
 def cast_unicode(s, encoding=None):
-    if isinstance(s, bytes):
-        return decode(s, encoding)
-    return s
+    return decode(s, encoding) if isinstance(s, bytes) else s
 
 
 def safe_unicode(e):

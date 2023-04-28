@@ -91,11 +91,7 @@ def num_ini_spaces(s):
     n : int
     """
 
-    ini_spaces = ini_spaces_re.match(s)
-    if ini_spaces:
-        return ini_spaces.end()
-    else:
-        return 0
+    return ini_spaces.end() if (ini_spaces := ini_spaces_re.match(s)) else 0
 
 # Fake token types for partial_tokenize:
 INCOMPLETE_STRING = tokenize.N_TOKENS
@@ -128,8 +124,7 @@ def partial_tokens(s):
     readline = io.StringIO(s).readline
     token = tokenize.TokenInfo(tokenize.NEWLINE, '', (1, 0), (1, 0), '')
     try:
-        for token in tokenize.generate_tokens(readline):
-            yield token
+        yield from tokenize.generate_tokens(readline)
     except tokenize.TokenError as e:
         # catch EOF error
         lines = s.splitlines(keepends=True)

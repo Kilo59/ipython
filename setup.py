@@ -5,6 +5,7 @@ Under Posix environments it works like a typical setup.py script.
 Under Windows, the command sdist is not supported, since IPython
 requires utilities which are not available under Windows."""
 
+
 #-----------------------------------------------------------------------------
 #  Copyright (c) 2008-2011, IPython Development Team.
 #  Copyright (c) 2001-2007, Fernando Perez <fernando.perez@colorado.edu>
@@ -27,10 +28,9 @@ if sys.version_info < (3, 9):
     pip_message = 'This may be due to an out of date pip. Make sure you have pip >= 9.0.1.'
     try:
         import pip
-        pip_version = tuple([int(x) for x in pip.__version__.split('.')[:3]])
-        if pip_version < (9, 0, 1) :
-            pip_message = 'Your pip version is out of date, please install pip >= 9.0.1. '\
-            'pip {} detected.'.format(pip.__version__)
+        pip_version = tuple(int(x) for x in pip.__version__.split('.')[:3])
+        if pip_version < (9, 0, 1):
+            pip_message = f'Your pip version is out of date, please install pip >= 9.0.1. pip {pip.__version__} detected.'
         else:
             # pip is new enough - it must be something else
             pip_message = ''
@@ -84,11 +84,7 @@ from setupbase import (
 # Handle OS specific things
 #-------------------------------------------------------------------------------
 
-if os.name in ('nt','dos'):
-    os_name = 'windows'
-else:
-    os_name = os.name
-
+os_name = 'windows' if os.name in {'nt', 'dos'} else os.name
 # Under Windows, 'sdist' has not been supported.  Now that the docs build with
 # Sphinx it might work, but let's not turn it on until someone confirms that it
 # actually works.

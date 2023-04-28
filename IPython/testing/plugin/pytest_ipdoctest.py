@@ -298,29 +298,30 @@ class IPDoctestItem(pytest.Item):
         return super().from_parent(name=name, parent=parent, runner=runner, dtest=dtest)
 
     def setup(self) -> None:
-        if self.dtest is not None:
-            self.fixture_request = _setup_fixtures(self)
-            globs = dict(getfixture=self.fixture_request.getfixturevalue)
-            for name, value in self.fixture_request.getfixturevalue(
-                "ipdoctest_namespace"
-            ).items():
-                globs[name] = value
-            self.dtest.globs.update(globs)
+        if self.dtest is None:
+            return
+        self.fixture_request = _setup_fixtures(self)
+        globs = dict(getfixture=self.fixture_request.getfixturevalue)
+        for name, value in self.fixture_request.getfixturevalue(
+            "ipdoctest_namespace"
+        ).items():
+            globs[name] = value
+        self.dtest.globs.update(globs)
 
-            from .ipdoctest import IPExample
+        from .ipdoctest import IPExample
 
-            if isinstance(self.dtest.examples[0], IPExample):
-                # for IPython examples *only*, we swap the globals with the ipython
-                # namespace, after updating it with the globals (which doctest
-                # fills with the necessary info from the module being tested).
-                self._user_ns_orig = {}
-                self._user_ns_orig.update(_ip.user_ns)
-                _ip.user_ns.update(self.dtest.globs)
-                # We must remove the _ key in the namespace, so that Python's
-                # doctest code sets it naturally
-                _ip.user_ns.pop("_", None)
-                _ip.user_ns["__builtins__"] = builtins
-                self.dtest.globs = _ip.user_ns
+        if isinstance(self.dtest.examples[0], IPExample):
+            # for IPython examples *only*, we swap the globals with the ipython
+            # namespace, after updating it with the globals (which doctest
+            # fills with the necessary info from the module being tested).
+            self._user_ns_orig = {}
+            self._user_ns_orig |= _ip.user_ns
+            _ip.user_ns.update(self.dtest.globs)
+            # We must remove the _ key in the namespace, so that Python's
+            # doctest code sets it naturally
+            _ip.user_ns.pop("_", None)
+            _ip.user_ns["__builtins__"] = builtins
+            self.dtest.globs = _ip.user_ns
 
     def teardown(self) -> None:
         from .ipdoctest import IPExample
@@ -368,8 +369,7 @@ class IPDoctestItem(pytest.Item):
         """Disable output capturing. Otherwise, stdout is lost to ipdoctest (pytest#985)."""
         if platform.system() != "Darwin":
             return
-        capman = self.config.pluginmanager.getplugin("capturemanager")
-        if capman:
+        if capman := self.config.pluginmanager.getplugin("capturemanager"):
             capman.suspend_global_capture(in_=True)
             out, err = capman.read_global_capture()
             sys.stdout.write(out)
@@ -400,10 +400,7 @@ class IPDoctestItem(pytest.Item):
             example = failure.example
             test = failure.test
             filename = test.filename
-            if test.lineno is None:
-                lineno = None
-            else:
-                lineno = test.lineno + example.lineno + 1
+            lineno = None if test.lineno is None else test.lineno + example.lineno + 1
             message = type(failure).__name__
             # TODO: ReprFileLocation doesn't expect a None lineno.
             reprlocation = ReprFileLocation(filename, lineno, message)  # type: ignore[arg-type]
@@ -433,7 +430,7 @@ class IPDoctestItem(pytest.Item):
                 ).split("\n")
             else:
                 inner_excinfo = ExceptionInfo.from_exc_info(failure.exc_info)
-                lines += ["UNEXPECTED EXCEPTION: %s" % repr(inner_excinfo.value)]
+                lines += [f"UNEXPECTED EXCEPTION: {repr(inner_excinfo.value)}"]
                 lines += [
                     x.strip("\n") for x in traceback.format_exception(*failure.exc_info)
                 ]
@@ -442,7 +439,7 @@ class IPDoctestItem(pytest.Item):
 
     def reportinfo(self) -> Tuple[Union["os.PathLike[str]", str], Optional[int], str]:
         assert self.dtest is not None
-        return self.path, self.dtest.lineno, "[ipdoctest] %s" % self.name
+        return self.path, self.dtest.lineno, f"[ipdoctest] {self.name}"
 
     if int(pytest.__version__.split(".")[0]) < 7:
 
@@ -478,11 +475,8 @@ def get_optionflags(parent):
 
 def _get_continue_on_failure(config):
     continue_on_failure = config.getvalue("ipdoctest_continue_on_failure")
-    if continue_on_failure:
-        # We need to turn off this if we use pdb since we should stop at
-        # the first failure.
-        if config.getvalue("usepdb"):
-            continue_on_failure = False
+    if continue_on_failure and config.getvalue("usepdb"):
+        continue_on_failure = False
     return continue_on_failure
 
 
@@ -856,4 +850,4 @@ def _get_report_choice(key: str) -> int:
 def ipdoctest_namespace() -> Dict[str, Any]:
     """Fixture that returns a :py:class:`dict` that will be injected into the
     namespace of ipdoctests."""
-    return dict()
+    return {}

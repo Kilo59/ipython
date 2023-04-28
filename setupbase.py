@@ -44,12 +44,7 @@ def execfile(fname, globs, locs=None):
 def file_doesnt_endwith(test,endings):
     """Return true if test is a file and its name does NOT end with any
     of the strings listed in endings."""
-    if not isfile(test):
-        return False
-    for e in endings:
-        if test.endswith(e):
-            return False
-    return True
+    return not any(test.endswith(e) for e in endings) if isfile(test) else False
 
 #---------------------------------------------------------------------------
 # Basic project information
@@ -79,7 +74,7 @@ def find_packages():
     packages = []
     for directory, subdirs, files in os.walk("IPython"):
         package = directory.replace(os.path.sep, ".")
-        if any(package.startswith("IPython." + exc) for exc in excludes):
+        if any(package.startswith(f"IPython.{exc}") for exc in excludes):
             # package is to be excluded (e.g. deathrow)
             continue
         if '__init__.py' not in files:
@@ -96,17 +91,12 @@ def find_package_data():
     """
     Find IPython's package_data.
     """
-    # This is not enough for these things to appear in an sdist.
-    # We need to muck with the MANIFEST to get this to work
-
-    package_data = {
-        'IPython.core' : ['profile/README*'],
-        'IPython.core.tests' : ['*.png', '*.jpg', 'daft_extension/*.py'],
-        'IPython.lib.tests' : ['*.wav'],
-        'IPython.testing.plugin' : ['*.txt'],
+    return {
+        'IPython.core': ['profile/README*'],
+        'IPython.core.tests': ['*.png', '*.jpg', 'daft_extension/*.py'],
+        'IPython.lib.tests': ['*.wav'],
+        'IPython.testing.plugin': ['*.txt'],
     }
-
-    return package_data
 
 
 def check_package_data(package_data):
@@ -117,9 +107,9 @@ def check_package_data(package_data):
         for d in data:
             path = pjoin(pkg_root, d)
             if '*' in path:
-                assert len(glob(path)) > 0, "No files match pattern %s" % path
+                assert len(glob(path)) > 0, f"No files match pattern {path}"
             else:
-                assert os.path.exists(path), "Missing package data: %s" % path
+                assert os.path.exists(path), f"Missing package data: {path}"
 
 
 def check_package_data_first(command):
@@ -156,10 +146,7 @@ def find_data_files():
         # When running from a source tree, the manpages aren't gzipped
         manpages = [f for f in glob(pjoin('docs','man','*.1')) if isfile(f)]
 
-    # And assemble the entire output list
-    data_files = [ (manpagebase, manpages) ]
-
-    return data_files
+    return [ (manpagebase, manpages) ]
 
 
 # The two functions below are copied from IPython.utils.path, so we don't need
@@ -240,19 +227,19 @@ class install_lib_symlink(Command):
         pkg = os.path.join(os.getcwd(), 'IPython')
         dest = os.path.join(self.install_dir, 'IPython')
         if os.path.islink(dest):
-            print('removing existing symlink at %s' % dest)
+            print(f'removing existing symlink at {dest}')
             os.unlink(dest)
-        print('symlinking %s -> %s' % (pkg, dest))
+        print(f'symlinking {pkg} -> {dest}')
         os.symlink(pkg, dest)
 
 class unsymlink(install):
     def run(self):
         dest = os.path.join(self.install_lib, 'IPython')
         if os.path.islink(dest):
-            print('removing symlink at %s' % dest)
+            print(f'removing symlink at {dest}')
             os.unlink(dest)
         else:
-            print('No symlink exists at %s' % dest)
+            print(f'No symlink exists at {dest}')
 
 class install_symlinked(install):
     def run(self):
@@ -296,6 +283,8 @@ def git_prebuild(pkg_dir, build_cmd=build_py):
     for use in IPython.utils.sysinfo.sys_info() calls after installation.
     """
 
+
+
     class MyBuildPy(build_cmd):
         ''' Subclass to write commit data into installation tree '''
         def run(self):
@@ -330,7 +319,7 @@ def git_prebuild(pkg_dir, build_cmd=build_py):
                 # nothing to write, don't clobber
                 return
 
-            print("writing git commit '%s' to %s" % (repo_commit, out_pth))
+            print(f"writing git commit '{repo_commit}' to {out_pth}")
 
             # remove to avoid overwriting original via hard link
             try:
@@ -344,6 +333,7 @@ def git_prebuild(pkg_dir, build_cmd=build_py):
                         'commit = "%s"\n' % repo_commit,
                     ]
                 )
+
 
     return MyBuildPy
 

@@ -1,5 +1,6 @@
 """Functions for Github API requests."""
 
+
 try:
     input = raw_input
 except NameError:
@@ -22,7 +23,9 @@ else:
 # Keyring stores passwords by a 'username', but we're not storing a username and
 # password
 import socket
-fake_username = 'ipython_tools_%s' % socket.gethostname().replace('.','_').replace('-','_')
+fake_username = (
+    f"ipython_tools_{socket.gethostname().replace('.', '_').replace('-', '_')}"
+)
 
 class Obj(dict):
     """Dictionary with attribute access to names."""
@@ -56,18 +59,15 @@ def get_auth_token():
     return token
 
 def make_auth_header():
-    return {'Authorization': 'token ' + get_auth_token()}
+    return {'Authorization': f'token {get_auth_token()}'}
 
 
 def get_pull_request(project, num, auth=False):
     """get pull request info  by number
     """
     url = "https://api.github.com/repos/{project}/pulls/{num}".format(project=project, num=num)
-    if auth:
-        header = make_auth_header()
-    else:
-        header = None
-    print("fetching %s" % url, file=sys.stderr)
+    header = make_auth_header() if auth else None
+    print(f"fetching {url}", file=sys.stderr)
     response = requests.get(url, headers=header)
     response.raise_for_status()
     return json.loads(response.text, object_hook=Obj)
@@ -82,9 +82,9 @@ def get_paged_request(url, headers=None, **params):
     while True:
         if '?' in url:
             params = None
-            print("fetching %s" % url, file=sys.stderr)
+            print(f"fetching {url}", file=sys.stderr)
         else:
-            print("fetching %s with %s" % (url, params), file=sys.stderr)
+            print(f"fetching {url} with {params}", file=sys.stderr)
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         results.extend(response.json())
@@ -98,30 +98,21 @@ def get_issues_list(project, auth=False, **params):
     """get issues list"""
     params.setdefault("state", "closed")
     url = "https://api.github.com/repos/{project}/issues".format(project=project)
-    if auth:
-        headers = make_auth_header()
-    else:
-        headers = None
-    pages = get_paged_request(url, headers=headers, **params)
-    return pages
+    headers = make_auth_header() if auth else None
+    return get_paged_request(url, headers=headers, **params)
 
 def get_milestones(project, auth=False, **params):
     params.setdefault('state', 'all')
     url = "https://api.github.com/repos/{project}/milestones".format(project=project)
-    if auth:
-        headers = make_auth_header()
-    else:
-        headers = None
-    milestones = get_paged_request(url, headers=headers, **params)
-    return milestones
+    headers = make_auth_header() if auth else None
+    return get_paged_request(url, headers=headers, **params)
 
 def get_milestone_id(project, milestone, auth=False, **params):
     milestones = get_milestones(project, auth=auth, **params)
     for mstone in milestones:
         if mstone['title'] == milestone:
             return mstone['number']
-    else:
-        raise ValueError("milestone %s not found" % milestone)
+    raise ValueError(f"milestone {milestone} not found")
 
 def is_pull_request(issue):
     """Return True if the given issue is a pull request."""
@@ -136,6 +127,6 @@ def get_authors(pr):
     authors = []
     for commit in commits:
         author = commit['commit']['author']
-        authors.append("%s <%s>" % (author['name'], author['email']))
+        authors.append(f"{author['name']} <{author['email']}>")
     return authors
 

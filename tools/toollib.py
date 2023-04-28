@@ -1,6 +1,7 @@
 """Various utilities common to IPython release and maintenance tools.
 """
 
+
 # Library imports
 import os
 import sys
@@ -14,7 +15,7 @@ cd = os.chdir
 # SSH root address of the archive site
 archive_user = 'ipython@archive.ipython.org'
 archive_dir = 'archive.ipython.org'
-archive = '%s:%s' % (archive_user, archive_dir)
+archive = f'{archive_user}:{archive_dir}'
 
 # Build commands
 # Source dists
@@ -25,10 +26,8 @@ build_command = "{python} -m build".format(python=sys.executable)
 def sh(cmd):
     """Run system command in shell, raise SystemExit if it returns an error."""
     print("$", cmd)
-    stat = os.system(cmd)
-    #stat = 0  # Uncomment this and comment previous to run in debug mode
-    if stat:
-        raise SystemExit("Command %s failed with code: %s" % (cmd, stat))
+    if stat := os.system(cmd):
+        raise SystemExit(f"Command {cmd} failed with code: {stat}")
 
 def get_ipdir():
     """Get IPython directory from command line, or assume it's the one above."""
@@ -40,7 +39,7 @@ def get_ipdir():
 
     cd(ipdir)
     if not os.path.isdir('IPython') and os.path.isfile('setup.py'):
-        raise SystemExit('Invalid ipython directory: %s' % ipdir)
+        raise SystemExit(f'Invalid ipython directory: {ipdir}')
     return ipdir
 
 def execfile(fname, globs, locs=None):

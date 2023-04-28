@@ -120,7 +120,7 @@ def system(cmd):
 
     with AvoidUNCPath() as path:
         if path is not None:
-            cmd = '"pushd %s &&"%s' % (path, cmd)
+            cmd = f'"pushd {path} &&"{cmd}'
         return process_handler(cmd, _system_body)
 
 def getoutput(cmd):
@@ -140,7 +140,7 @@ def getoutput(cmd):
 
     with AvoidUNCPath() as path:
         if path is not None:
-            cmd = '"pushd %s &&"%s' % (path, cmd)
+            cmd = f'"pushd {path} &&"{cmd}'
         out = process_handler(cmd, lambda p: p.communicate()[0], STDOUT)
 
     if out is None:
@@ -172,7 +172,11 @@ try:
         argvn = c_int()
         result_pointer = CommandLineToArgvW(py3compat.cast_unicode(commandline.lstrip()), ctypes.byref(argvn))
         result_array_type = LPCWSTR * argvn.value
-        result = [arg for arg in result_array_type.from_address(ctypes.addressof(result_pointer.contents))]
+        result = list(
+            result_array_type.from_address(
+                ctypes.addressof(result_pointer.contents)
+            )
+        )
         retval = LocalFree(result_pointer)
         return result
 except AttributeError:

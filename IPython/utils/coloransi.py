@@ -112,10 +112,7 @@ class ColorScheme:
     """Generic color scheme class. Just a name and a Struct."""
     def __init__(self,__scheme_name_,colordict=None,**colormap):
         self.name = __scheme_name_
-        if colordict is None:
-            self.colors = Struct(**colormap)
-        else:
-            self.colors = Struct(colordict)
+        self.colors = Struct(**colormap) if colordict is None else Struct(colordict)
 
     def copy(self,name=None):
         """Return a full copy of the object, optionally renaming it."""
@@ -177,8 +174,10 @@ class ColorSchemeTable(dict):
         try:
             scheme_idx = valid_schemes.index(scheme_test)
         except ValueError as e:
-            raise ValueError('Unrecognized color scheme: ' + scheme + \
-                  '\nValid schemes: '+str(scheme_names).replace("'', ",'')) from e
+            raise ValueError(
+                (f'Unrecognized color scheme: {scheme}' + '\nValid schemes: ')
+                + str(scheme_names).replace("'', ", '')
+            ) from e
         else:
             active = scheme_names[scheme_idx]
             self.active_scheme_name = active
