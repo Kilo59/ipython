@@ -35,7 +35,7 @@ class CustomPrompt(Prompts):
             (Token.OutPromptNum, str(self.shell.execution_count)),
             (Token.OutPrompt, '>: '),
         ]
- 
+
 
 from traitlets.config.loader import Config
 try:
@@ -117,7 +117,7 @@ def bar(n):
     s = 'eggs'
     ipshell('***In bar(). Try %whos, or print s or n:')
     print('bar says n = ',n)
-    
+
 # Some calls to the above functions which will trigger IPython:
 print('Main program calling foo("eggs")\n')
 foo('eggs')

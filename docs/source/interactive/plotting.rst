@@ -27,8 +27,8 @@ Plotting
     advantages of working outside of IPython as well.
 
 
-One major feature of the IPython kernel is the ability to display plots that 
-are the output of running code cells. The IPython kernel is designed to work 
+One major feature of the IPython kernel is the ability to display plots that
+are the output of running code cells. The IPython kernel is designed to work
 seamlessly with the matplotlib_ plotting library to provide this functionality.
 
 To set this up, before any plotting or import of matplotlib is performed you
@@ -62,6 +62,6 @@ it. The resulting plots will then also be stored in the notebook document.
 The matplotlib_ library also ships with ``%matplotlib notebook`` command that
 allows interactive figures if your environment allows it.
 
-See the matplotlib_ documentation for more information. 
+See the matplotlib_ documentation for more information.
 
 .. include:: ../links.txt

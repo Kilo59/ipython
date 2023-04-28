@@ -26,5 +26,3 @@ def uniq_stable(elems):
 def chop(seq, size):
     """Chop a sequence into chunks of the given size."""
     return [seq[i:i+size] for i in range(0,len(seq),size)]
-
-

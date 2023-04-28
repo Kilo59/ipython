@@ -81,6 +81,3 @@ else:
 
     print("`./release upload` to upload source distribution on PyPI and ipython archive")
     sys.exit(0)
-
-
-

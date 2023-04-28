@@ -38,7 +38,7 @@ If all goes well, then just type::
 
 to run IPython's test suite.
 
-    
+
 It is meant to be used in an environment where you have your ``$PATH``,
 ``$PYTHONPATH``, etc variables properly configured, so that the installation of
 packages can be made with (using ``~/usr/local`` as an example)::
@@ -89,7 +89,7 @@ takes 64-bit operating systems into account::
       if [[ $MACHINE == "x86_64" ]]; then
 	  lp=$prefix/lib64:$prefix/lib
 	  pp=$prefix/lib64/$pypath:$prefix/lib/$pypath
-      else	
+      else
 	  lp=$prefix/lib
 	  pp=$prefix/lib/$pypath
       fi

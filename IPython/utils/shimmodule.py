@@ -50,19 +50,19 @@ class ShimModule(types.ModuleType):
             sys.meta_path.append(
                 ShimImporter(src=src, mirror=self._mirror)
             )
-    
+
     @property
     def __path__(self):
         return []
-    
+
     @property
     def __spec__(self):
         """Don't produce __spec__ until requested"""
         return import_module(self._mirror).__spec__
-    
+
     def __dir__(self):
         return dir(import_module(self._mirror))
-    
+
     @property
     def __all__(self):
         """Ensure __all__ is always defined"""

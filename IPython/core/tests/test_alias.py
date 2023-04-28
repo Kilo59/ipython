@@ -29,7 +29,7 @@ def test_alias_lifecycle():
     with pytest.raises(ValueError):
         am.retrieve_alias(name)
     assert (name, cmd) not in am.aliases
-    
+
 
 def test_alias_args_error():
     """Error expanding with wrong number of arguments"""
@@ -58,9 +58,9 @@ def test_alias_args_commented_nargs():
     am = _ip.alias_manager
     alias_name = 'comargcount'
     cmd = 'echo this is %%s a commented out arg and this is not %s'
-    
+
     am.define_alias(alias_name, cmd)
     assert am.is_alias(alias_name)
-    
+
     thealias = am.get_alias(alias_name)
     assert thealias.nargs == 1

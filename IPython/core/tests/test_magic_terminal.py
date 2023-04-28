@@ -105,10 +105,10 @@ class PasteTestCase(TestCase):
         # Inject fake clipboard hook but save original so we can restore it later
         self.original_clip = ip.hooks.clipboard_get
 
-    def tearDown(self): 
+    def tearDown(self):
         # Restore original hook
         ip.hooks.clipboard_get = self.original_clip
-       
+
     def test_paste(self):
         ip.user_ns.pop("x", None)
         self.paste("x = 1")
@@ -128,7 +128,7 @@ class PasteTestCase(TestCase):
         >>> y = []
         >>> for i in x:
         ...     y.append(i**2)
-        ... 
+        ...
         """
         )
         self.assertEqual(ip.user_ns["x"], [1, 2, 3])
@@ -170,7 +170,7 @@ class PasteTestCase(TestCase):
             """\
         >> >>> def f(x):
         >> ...   return x+1
-        >> ... 
+        >> ...
         >> >>> zz = f(2.5)      """
         )
         self.assertEqual(ip.user_ns["zz"], 3.5)

@@ -90,13 +90,13 @@ def embed_kernel(module=None, local_ns=None, **kwargs):
         allowing configuration of the kernel (see :ref:`kernel_options`).  Will only have an effect
         on the first embed_kernel call for a given process.
     """
-    
+
     (caller_module, caller_locals) = extract_module_locals(1)
     if module is None:
         module = caller_module
     if local_ns is None:
         local_ns = caller_locals
-    
+
     # Only import .zmq when we really need it
     from ipykernel.embed import embed_kernel as real_embed_kernel
     real_embed_kernel(module=module, local_ns=local_ns, **kwargs)

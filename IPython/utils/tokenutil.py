@@ -74,7 +74,7 @@ def token_at_cursor(cell, cursor_pos=0):
 
     offsets = {1: 0} # lines start at 1
     for tup in generate_tokens(StringIO(cell).readline):
-        
+
         tok = Token(*tup)
 
         # token, text, start, end, line = tup
@@ -122,5 +122,3 @@ def token_at_cursor(cell, cursor_pos=0):
         return names[-1]
     else:
         return ''
-    
-

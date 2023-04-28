@@ -4,9 +4,9 @@
 # single dict , named `latex_symbols`. The keys in this dict are latex symbols,
 # such as `\\alpha` and the values in the dict are the unicode equivalents for
 # those. Most importantly, only unicode symbols that are valid identifiers in
-# Python 3 are included. 
+# Python 3 are included.
 
-# 
+#
 # The original mapping of latex symbols to unicode comes from the `latex_symbols.jl` files from Julia.
 
 from pathlib import Path
@@ -83,5 +83,3 @@ reverse_latex_symbol = { v:k for k,v in latex_symbols.items()}
 fn = Path("..", "IPython", "core", "latex_symbols.py")
 print(f"Writing the file: {str(fn)}")
 fn.write_text(s, encoding="utf-8")
-
-

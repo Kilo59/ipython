@@ -29,7 +29,7 @@ from types import SimpleNamespace as Obj
 
 class FuncClsScanner(ast.NodeVisitor):
     """Scan a module for top-level functions and classes.
-    
+
     Skips objects with an @undoc decorator, or a name starting with '_'.
     """
     def __init__(self):
@@ -50,7 +50,7 @@ class FuncClsScanner(ast.NodeVisitor):
             return   # Ignore classes defined in "if __name__ == '__main__':"
 
         self.generic_visit(node)
-    
+
     def visit_FunctionDef(self, node):
         if (
             not node.name.startswith('_')
@@ -58,7 +58,7 @@ class FuncClsScanner(ast.NodeVisitor):
             and node.name not in self.functions
         ):
             self.functions.append(node.name)
-    
+
     def visit_ClassDef(self, node):
         if (
             not node.name.startswith("_")
@@ -72,7 +72,7 @@ class FuncClsScanner(ast.NodeVisitor):
             )
             self.classes.append(cls)
             self.classes_seen.add(node.name)
-    
+
     def scan(self, mod):
         self.visit(mod)
         return self.functions, self.classes

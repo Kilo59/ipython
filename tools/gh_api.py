@@ -129,4 +129,3 @@ def get_authors(pr):
         author = commit['commit']['author']
         authors.append(f"{author['name']} <{author['email']}>")
     return authors
-

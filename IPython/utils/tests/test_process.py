@@ -42,7 +42,7 @@ def test_find_cmd_ls():
     path = find_cmd("ls")
     assert path.endswith("ls")
 
-    
+
 @dec.skip_if_not_win32
 def test_find_cmd_pythonw():
     """Try to find pythonw on Windows."""
@@ -182,5 +182,3 @@ class SubProcessTestCase(tt.TempFileMixin):
         self.assertEqual(out, 'on stdout')
         self.assertEqual(err, 'on stderr')
         self.assertEqual(code, 0)
-
-        

@@ -71,7 +71,7 @@ def doctest_bad(x,y=1,**k):
 
 def call_doctest_bad():
     """Check that we can still call the decorated functions.
-    
+
     >>> doctest_bad(3,y=4)
     x: 3
     y: 4
@@ -91,7 +91,7 @@ def test_skip_dt_decorator():
     """
     # Fetch the docstring from doctest_bad after decoration.
     val = doctest_bad.__doc__
-    
+
     assert check == val, "doctest_bad docstrings don't match"
 
 
@@ -116,7 +116,7 @@ class FooClass(object):
         """
         print('Making a FooClass.')
         self.x = x
-        
+
     @skip_doctest
     def bar(self,y):
         """Example:

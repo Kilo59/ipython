@@ -40,7 +40,5 @@ echo "$HASH # apply black to $FILE" >> .git-blame-ignore-revs
 
 git commit -am'Update .git-blame-ignore-revs with previous commit'
 
-echo 
+echo
 echo "Updating, reformatting and adding to .git-blame-ignore-revs successful"
-
-

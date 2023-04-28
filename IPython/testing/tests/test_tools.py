@@ -47,7 +47,7 @@ def test_full_path_win32():
     result = tt.full_path(spath, "a.txt")
     assert result == ["c:\\a.txt"]
 
-    
+
 def test_parser():
     err = ("FAILED (errors=1)", 1, 0)
     fail = ("FAILED (failures=1)", 0, 1)
@@ -72,14 +72,14 @@ class TestAssertPrints(unittest.TestCase):
             print("abcd")
             print("def")
             print(b"ghi")
-    
+
     def test_failing(self):
         def func():
             with tt.AssertPrints("abc"):
                 print("acd")
                 print("def")
                 print(b"ghi")
-        
+
         self.assertRaises(AssertionError, func)
 
 

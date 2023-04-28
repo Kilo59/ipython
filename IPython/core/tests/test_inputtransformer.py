@@ -11,7 +11,7 @@ def transform_and_reset(transformer):
             return transformer.push(inp)
         finally:
             transformer.reset()
-    
+
     return transform
 
 # Transformer tests
@@ -226,20 +226,20 @@ syntax_ml = \
           ('... 2]','2]'),
          ],
        ],
-        
+
        multiline_datastructure =
        [ [('b = ("%s"', None),
           ('# comment', None),
           ('%foo )', 'b = ("%s"\n# comment\n%foo )'),
          ],
        ],
-       
+
        multiline_string =
        [ [("'''foo?", None),
           ("bar'''", "'''foo?\nbar'''"),
          ],
        ],
-       
+
        leading_indent =
        [ [('    print "hi"','print "hi"'),
           ],
@@ -253,7 +253,7 @@ syntax_ml = \
           ('    123"""','    123"""'),
           ],
        ],
-       
+
        cellmagic =
        [ [('%%foo a', None),
           (None, "get_ipython().run_cell_magic('foo', 'a', '')"),
@@ -266,7 +266,7 @@ syntax_ml = \
           ('%%cellmagic', '%%cellmagic'),
           ],
        ],
-       
+
        escaped =
        [ [('%abc def \\', None),
           ('ghi', "get_ipython().run_line_magic('abc', 'def ghi')"),
@@ -276,7 +276,7 @@ syntax_ml = \
           (None, "get_ipython().run_line_magic('abc', 'def ghi')"),
           ],
        ],
-       
+
        assign_magic =
        [ [('a = %bc de \\', None),
           ('fg', "a = get_ipython().run_line_magic('bc', 'de fg')"),
@@ -286,7 +286,7 @@ syntax_ml = \
           (None, "a = get_ipython().run_line_magic('bc', 'de fg')"),
           ],
        ],
-       
+
        assign_system =
        [ [('a = !bc de \\', None),
           ('fg', "a = get_ipython().getoutput('bc de fg')"),
@@ -406,7 +406,7 @@ def test_escaped_paren():
 def test_cellmagic():
     for example in syntax_ml['cellmagic']:
         transform_checker(example, ipt.cellmagic)
-    
+
     line_example = [('%%bar 123', None),
                     ('hello', None),
                     ('' , "get_ipython().run_cell_magic('bar', '123', 'hello')"),

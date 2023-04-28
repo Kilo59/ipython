@@ -68,7 +68,7 @@ class ProfileDir(LoggingConfigurable):
         self.pid_dir = os.path.join(new, self.pid_dir_name)
         self.static_dir = os.path.join(new, self.static_dir_name)
         self.check_dirs()
-    
+
     def _mkdir(self, path, mode=None):
         """ensure a directory exists at a given path
 
@@ -102,11 +102,11 @@ class ProfileDir(LoggingConfigurable):
                 raise
 
         return True
-    
+
     @observe('log_dir')
     def check_log_dir(self, change=None):
         self._mkdir(self.log_dir)
-    
+
     @observe('startup_dir')
     def check_startup_dir(self, change=None):
         self._mkdir(self.startup_dir)

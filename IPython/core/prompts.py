@@ -16,6 +16,6 @@ class LazyEvaluate(object):
 
     def __str__(self):
         return str(self())
-    
+
     def __format__(self, format_spec):
         return format(self(), format_spec)

@@ -81,7 +81,7 @@ def _restore_term_title_xterm():
     # Make sure the restore has at least one accompanying set.
     global _xterm_term_title_saved
     assert _xterm_term_title_saved
-    sys.stdout.write('\033[23;0t') 
+    sys.stdout.write('\033[23;0t')
     _xterm_term_title_saved = False
 
 

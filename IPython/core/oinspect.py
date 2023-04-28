@@ -262,7 +262,7 @@ def format_argspec(argspec):
 
     DEPRECATED (since 7.10): Do not use; will be removed in future versions.
     """
-    
+
     warnings.warn('`format_argspec` function is deprecated as of IPython 7.10'
                   'and will be removed in future versions.', DeprecationWarning, stacklevel=2)
 

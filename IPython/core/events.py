@@ -18,10 +18,10 @@ from backcall import callback_prototype
 
 class EventManager(object):
     """Manage a collection of events and a sequence of callbacks for each.
-    
+
     This is attached to :class:`~IPython.core.interactiveshell.InteractiveShell`
     instances as an ``events`` attribute.
-    
+
     .. note::
 
        This API is experimental in IPython 2.0, and may be revised in future versions.
@@ -38,7 +38,7 @@ class EventManager(object):
         """
         self.shell = shell
         self.callbacks = {n:[] for n in available_events}
-    
+
     def register(self, event, function):
         """Register a new event callback.
 
@@ -62,7 +62,7 @@ class EventManager(object):
         callback_proto = available_events.get(event)
         if function not in self.callbacks[event]:
             self.callbacks[event].append(callback_proto.adapt(function))
-    
+
     def unregister(self, event, function):
         """Remove a callback from the given event."""
         if function in self.callbacks[event]:

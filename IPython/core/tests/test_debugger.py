@@ -136,15 +136,15 @@ def test_ipdb_magics():
     ----> 3    debugger.Pdb().set_trace()
     <BLANKLINE>
     ipdb> continue
-    
-    Restore previous trace function, e.g. for coverage.py    
-    
+
+    Restore previous trace function, e.g. for coverage.py
+
     >>> sys.settrace(old_trace)
     '''
 
 def test_ipdb_magics2():
     '''Test ipdb with a very short function.
-    
+
     >>> old_trace = sys.gettrace()
 
     >>> def bar():
@@ -161,9 +161,9 @@ def test_ipdb_magics2():
     ----> 2    pass
     <BLANKLINE>
     ipdb> continue
-    
-    Restore previous trace function, e.g. for coverage.py    
-    
+
+    Restore previous trace function, e.g. for coverage.py
+
     >>> sys.settrace(old_trace)
     '''
 

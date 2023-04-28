@@ -160,7 +160,7 @@ class InteractiveShellTestCase(unittest.TestCase):
         """Get last n readline history entries as a list"""
         return [rl.get_history_item(rl.get_current_history_length() - x)
                 for x in range(n - 1, -1, -1)]
-    
+
     @mock_input
     def test_inputtransformer_syntaxerror(self):
         ip = get_ipython()
@@ -248,8 +248,8 @@ class TerminalMagicsTestCase(unittest.TestCase):
              '    b = a+1\n'
              '\n'
              '    return b')
-        
+
         tm = ip.magics_manager.registry['TerminalMagics']
         tm.store_or_execute(s, name=None)
-        
+
         self.assertEqual(ip.user_ns['pasted_func'](54), 55)

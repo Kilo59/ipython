@@ -40,4 +40,3 @@ def check_version(v, check):
         return LooseVersion(v) >= LooseVersion(check)
     except TypeError:
         return True
-

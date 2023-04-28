@@ -31,7 +31,7 @@ for f in path('..').walkfiles('*.py'):
     if '\r' in cont:
         errs+='r'
         rets.append(f)
-        
+
     if errs:
         print("%3s" % errs, f)
 

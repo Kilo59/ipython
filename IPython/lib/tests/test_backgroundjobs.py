@@ -58,7 +58,7 @@ def test_flush():
     assert len(jobs.dead) == 0
     jobs.flush()
     assert len(jobs.completed) == 0
-    
+
 
 def test_dead():
     """Test control of dead jobs"""
@@ -67,7 +67,7 @@ def test_dead():
     j.join()
     assert len(jobs.completed) == 0
     assert len(jobs.dead) == 1
-    jobs.flush()    
+    jobs.flush()
     assert len(jobs.dead) == 0
 
 
@@ -76,7 +76,7 @@ def test_longer():
     jobs = bg.BackgroundJobManager()
     # Sleep for long enough for the following two checks to still report the
     # job as running, but not so long that it makes the test suite noticeably
-    # slower. 
+    # slower.
     j = jobs.new(sleeper, 0.1)
     assert len(jobs.running) == 1
     assert len(jobs.completed) == 0

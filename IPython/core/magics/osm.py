@@ -71,7 +71,7 @@ class OSMagics(Magics):
         return file.is_file() if os.access(file.path, os.X_OK) else False
 
 
-    
+
     def _isexec_WIN(self, file):
         """
         Test for executable file on non POSIX system
@@ -167,7 +167,7 @@ class OSMagics(Magics):
         except TypeError:
             print(oinspect.getdoc(self.alias))
             return
-        
+
         try:
             self.shell.alias_manager.define_alias(alias, cmd)
         except AliasError as e:
@@ -184,7 +184,7 @@ class OSMagics(Magics):
         except ValueError as e:
             print(e)
             return
-        
+
         stored = self.shell.db.get('stored_aliases', {} )
         if aname in stored:
             print("Removing %stored alias",aname)
@@ -711,7 +711,7 @@ class OSMagics(Magics):
 
         This is very useful when trying to use such lists as arguments to
         system commands."""
-        
+
         if cell is None:
             # line magic
             return self.shell.getoutput(line)

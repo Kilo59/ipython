@@ -136,7 +136,7 @@ class TimeitTemplateFiller(ast.NodeTransformer):
 
 class Timer(timeit.Timer):
     """Timer class that explicitly uses self.inner
-    
+
     which is an undocumented implementation detail of CPython,
     not shared by PyPy.
     """
@@ -1350,9 +1350,9 @@ class ExecutionMagics(Magics):
           so that magics are loaded in their transformed version to valid
           Python.  If this option is given, the raw input as typed at the
           command line is used instead.
-          
-          -q: quiet macro definition.  By default, a tag line is printed 
-          to indicate the macro has been created, and then the contents of 
+
+          -q: quiet macro definition.  By default, a tag line is printed
+          to indicate the macro has been created, and then the contents of
           the macro are printed.  If this option is given, then no printout
           is produced once the macro is created.
 
@@ -1414,7 +1414,7 @@ class ExecutionMagics(Magics):
             return
         macro = Macro(lines)
         self.shell.define_macro(name, macro)
-        if 'q' not in opts: 
+        if 'q' not in opts:
             print(f'Macro `{name}` created. To execute, type its name (without quotes).')
             print('=== Macro contents: ===')
             print(macro, end=' ')
@@ -1463,7 +1463,7 @@ def parse_breakpoint(text, current_file):
         return current_file, int(text)
     else:
         return text[:colon], int(text[colon+1:])
-    
+
 def _format_time(timespan, precision=3):
     """Formats the timespan in a human readable form"""
 
@@ -1484,11 +1484,11 @@ def _format_time(timespan, precision=3):
 
 
     # Unfortunately the unicode 'micro' symbol can cause problems in
-    # certain terminals.  
+    # certain terminals.
     # See bug: https://bugs.launchpad.net/ipython/+bug/348466
     # Try to prevent crashes by being more secure than it needs to
     # E.g. eclipse is able to print a µ, but has no sys.stdout.encoding set.
-    units = [u"s", u"ms",u'us',"ns"] # the save value   
+    units = [u"s", u"ms",u'us',"ns"] # the save value
     if hasattr(sys.stdout, 'encoding') and sys.stdout.encoding:
         try:
             u'\xb5'.encode(sys.stdout.encoding)

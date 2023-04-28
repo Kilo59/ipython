@@ -20,7 +20,3 @@ def unload_ipython_extension(shell):
         print("cannot unload")
     else:
         shell.prompts = shell.prompts.old_prompts
-
-
-
-

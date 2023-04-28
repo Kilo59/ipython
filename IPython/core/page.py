@@ -148,7 +148,7 @@ def pager_page(strng, start=0, screen_lines=0, pager_cmd=None):
     If no system pager works, the string is sent through a 'dumb pager'
     written in python, very simplistic.
     """
-    
+
     # for compatibility with mime-bundle form:
     if isinstance(strng, dict):
         strng = strng['text/plain']

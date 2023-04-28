@@ -156,7 +156,7 @@ def test_dollar_formatter():
     f = text.DollarFormatter()
     eval_formatter_check(f)
     eval_formatter_slicing_check(f)
-    
+
     ns = dict(n=12, pi=math.pi, stuff='hello there', os=os)
     s = f.format("$n", **ns)
     assert s == "12"
@@ -174,12 +174,12 @@ def test_strip_email():
     src = """\
         >> >>> def f(x):
         >> ...   return x+1
-        >> ... 
+        >> ...
         >> >>> zz = f(2.5)"""
     cln = """\
 >>> def f(x):
 ...   return x+1
-... 
+...
 >>> zz = f(2.5)"""
     assert text.strip_email_quotes(src) == cln
 

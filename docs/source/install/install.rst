@@ -7,7 +7,7 @@ Installing IPython
 IPython 6 requires Python ≥ 3.3. IPython 5.x can be installed on Python 2.
 
 
-Quick Install 
+Quick Install
 -------------
 
 With ``pip`` already installed :
@@ -113,7 +113,7 @@ Installing the development version
 
 It is also possible to install the development version of IPython from our
 `Git <http://git-scm.com/>`_ source code repository.  To do this you will
-need to have Git installed on your system.  
+need to have Git installed on your system.
 
 
 Then do:

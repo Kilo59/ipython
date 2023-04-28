@@ -41,7 +41,7 @@ ESC_SEQUENCES = [ESC_SHELL, ESC_SH_CAP, ESC_HELP ,\
 
 class InputTransformer(metaclass=abc.ABCMeta):
     """Abstract base class for line-based input transformers."""
-    
+
     @abc.abstractmethod
     def push(self, line):
         """Send a line of input to the transformer, returning the transformed
@@ -53,7 +53,7 @@ class InputTransformer(metaclass=abc.ABCMeta):
         other exceptions may be raised.
         """
         pass
-    
+
     @abc.abstractmethod
     def reset(self):
         """Return, transformed any lines that the transformer has accumulated,
@@ -62,7 +62,7 @@ class InputTransformer(metaclass=abc.ABCMeta):
         Must be overridden by subclasses.
         """
         pass
-    
+
     @classmethod
     def wrap(cls, func):
         """Can be used by subclasses as a decorator, to return a factory that
@@ -71,22 +71,22 @@ class InputTransformer(metaclass=abc.ABCMeta):
         @functools.wraps(func)
         def transformer_factory(**kwargs):
             return cls(func, **kwargs)
-        
+
         return transformer_factory
 
 class StatelessInputTransformer(InputTransformer):
     """Wrapper for a stateless input transformer implemented as a function."""
     def __init__(self, func):
         self.func = func
-    
+
     def __repr__(self):
         return "StatelessInputTransformer(func={0!r})".format(self.func)
-    
+
     def push(self, line):
         """Send a line of input to the transformer, returning the
         transformed input."""
         return self.func(line)
-    
+
     def reset(self):
         """No-op - exists for compatibility."""
         pass
@@ -97,17 +97,17 @@ class CoroutineInputTransformer(InputTransformer):
         # Prime it
         self.coro = coro(**kwargs)
         next(self.coro)
-    
+
     def __repr__(self):
         return "CoroutineInputTransformer(coro={0!r})".format(self.coro)
-    
+
     def push(self, line):
         """Send a line of input to the transformer, returning the
         transformed input or None if the transformer is waiting for more
         input.
         """
         return self.coro.send(line)
-    
+
     def reset(self):
         """Return, transformed any lines that the transformer has
         accumulated, and reset its internal state.
@@ -116,7 +116,7 @@ class CoroutineInputTransformer(InputTransformer):
 
 class TokenInputTransformer(InputTransformer):
     """Wrapper for a token-based input transformer.
-    
+
     func should accept a list of tokens (5-tuples, see tokenize docs), and
     return an iterable which can be passed to tokenize.untokenize().
     """
@@ -149,14 +149,14 @@ class TokenInputTransformer(InputTransformer):
             # Multi-line statement - stop and try again with the next line
             self.reset_tokenizer()
             return None
-        
+
         return self.output(tokens)
-    
+
     def output(self, tokens):
         self.buf.clear()
         self.reset_tokenizer()
         return untokenize(self.func(tokens)).rstrip('\n')
-    
+
     def reset(self):
         l = ''.join(self.buf)
         self.buf.clear()
@@ -167,7 +167,7 @@ class TokenInputTransformer(InputTransformer):
 class assemble_python_lines(TokenInputTransformer):
     def __init__(self):
         super(assemble_python_lines, self).__init__(None)
-    
+
     def output(self, tokens):
         return self.reset()
 
@@ -179,7 +179,7 @@ def assemble_logical_lines():
         line = (yield line)
         if not line or line.isspace():
             continue
-        
+
         parts = []
         while line is not None:
             if line.endswith('\\') and (not has_comment(line)):
@@ -188,7 +188,7 @@ def assemble_logical_lines():
             else:
                 parts.append(line)
                 break
-        
+
         # Output
         line = ''.join(parts)
 
@@ -333,7 +333,7 @@ def ends_in_comment_or_string(src):
     """
     toktypes = _line_tokens(src)
     return (tokenize.COMMENT in toktypes) or (_MULTILINE_STRING in toktypes)
-        
+
 
 @StatelessInputTransformer.wrap
 def help_end(line):
@@ -363,17 +363,17 @@ def cellmagic(end_on_blank_line=False):
         # consume leading empty lines
         while not line:
             line = (yield line)
-        
+
         if not line.startswith(ESC_MAGIC2):
             # This isn't a cell magic, idle waiting for reset then start over
             while line is not None:
                 line = (yield line)
             continue
-        
+
         if cellmagic_help_re.match(line):
             # This case will be handled by help_end
             continue
-        
+
         first = line
         body = []
         line = (yield None)
@@ -381,7 +381,7 @@ def cellmagic(end_on_blank_line=False):
                                 ((line.strip() != '') or not end_on_blank_line):
             body.append(line)
             line = (yield None)
-        
+
         # Output
         magic_name, _, first = first.partition(' ')
         magic_name = magic_name.lstrip(ESC_MAGIC2)

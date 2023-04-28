@@ -42,7 +42,7 @@ if [[ ! -x $PYTHONX ]]; then
     echo "ERROR: no python executable found at given path: $PYTHON"
     echo "Aborting."
     exit 1
-fi    
+fi
 
 # Python version information.  PYTHONV holds a versioned string used to build
 # the site-packages path for the actual Python version we'll use.

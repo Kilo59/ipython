@@ -21,7 +21,7 @@ class MagicsDisplay(object):
     def __init__(self, magics_manager, ignore=None):
         self.ignore = ignore if ignore else []
         self.magics_manager = magics_manager
-    
+
     def _lsmagic(self):
         """The main implementation of the %lsmagic"""
         mesc = magic_escapes['line']
@@ -59,10 +59,10 @@ class MagicsDisplay(object):
 
     def _repr_pretty_(self, p, cycle):
         p.text(self._lsmagic())
-    
+
     def __str__(self):
         return self._lsmagic()
-    
+
     def _jsonable(self):
         """turn magics dict into jsonable dict of the same structure
 
@@ -79,10 +79,10 @@ class MagicsDisplay(object):
                     classname = obj.__self__.__class__.__name__
                 except AttributeError:
                     classname = 'Other'
-                
+
                 d[name] = classname
         return magic_dict
-        
+
     def _repr_json_(self):
         return self._jsonable()
 

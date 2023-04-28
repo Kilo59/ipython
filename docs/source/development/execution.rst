@@ -68,5 +68,3 @@ execution in 'single' mode, and then:
 
   * otherwise (last block is also multiline), run all in 'exec' mode as a single
     unit.
-
-

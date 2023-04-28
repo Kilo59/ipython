@@ -28,7 +28,7 @@ class TeeTestCase(unittest.TestCase):
         trap = StringIO()
         chan = StringIO()
         text = 'Hello'
-        
+
         std_ori = getattr(sys, channel)
         setattr(sys, channel, trap)
 
@@ -51,7 +51,7 @@ class TestIOStream(unittest.TestCase):
 
     def test_capture_output(self):
         """capture_output() context works"""
-        
+
         with capture_output() as io:
             print("hi, stdout")
             print("hi, stderr", file=sys.stderr)

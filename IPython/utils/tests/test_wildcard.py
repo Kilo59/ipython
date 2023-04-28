@@ -111,7 +111,7 @@ class Tests (unittest.TestCase):
                                              show_all=True).keys())
             a.sort()
             self.assertEqual(a,res)
-            
+
     def test_dict_attributes(self):
         """Dictionaries should be indexed by attributes, not by keys. This was
         causing Github issue 129."""
@@ -126,7 +126,7 @@ class Tests (unittest.TestCase):
             a = sorted(wildcard.list_namespace(ns, "all", pat, ignore_case=False,
                                                show_all=True).keys())
             self.assertEqual(a, res)
-    
+
     def test_dict_dir(self):
         class A(object):
             def __init__(self):
@@ -136,7 +136,7 @@ class Tests (unittest.TestCase):
                 if name=="a":
                     raise AttributeError
                 return object.__getattribute__(self, name)
-                
+
         a = A()
         adict = wildcard.dict_dir(a)
         assert "a" not in adict # change to assertNotIn method in >= 2.7

@@ -33,10 +33,10 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
     - name: Install ipykernel
       run: |
-        cd .. 
+        cd ..
         git clone https://github.com/ipython/ipykernel
         cd ipykernel
-        pip install -e .[test] 
+        pip install -e .[test]
         cd ..
     - name: Install and update Python dependencies
       run: |

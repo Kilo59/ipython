@@ -11,7 +11,7 @@ When a GUI program is used interactively within IPython, the event loop of
 the GUI should *not* be started. This is because, the PyOS_Inputhook itself
 is responsible for iterating the GUI event loop.
 
-IPython has facilities for installing the needed input hook for each GUI 
+IPython has facilities for installing the needed input hook for each GUI
 toolkit and for creating the needed main GUI application object. Usually,
 these main application objects should be created only once and for some
 GUI toolkits, special options have to be passed to the application object
@@ -51,5 +51,3 @@ Here is some sample code I have been using to debug this issue::
     f.configure_traits()
 
     plt.plot(range(10))
-
-

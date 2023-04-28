@@ -19,7 +19,7 @@ def pyfunc():
     ...     print(i, end=' ')
     ...     print(i+1, end=' ')
     ...
-    0 1 1 2 2 3 
+    0 1 1 2 2 3
     """
     return 'pyfunc'
 

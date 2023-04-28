@@ -92,7 +92,7 @@ def read_py_url(url, errors='replace', skip_encoding_cookie=True):
     A unicode string containing the contents of the file.
     """
     # Deferred import for faster start
-    from urllib.request import urlopen 
+    from urllib.request import urlopen
     response = urlopen(url)
     buffer = io.BytesIO(response.read())
     return source_to_unicode(buffer, errors, skip_encoding_cookie)

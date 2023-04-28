@@ -471,4 +471,3 @@ def help_all_output_test(subcommand=''):
     assert "Options" in out
     assert "Class" in out
     return out, err
-

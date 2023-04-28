@@ -90,7 +90,7 @@ class LoggingMagics(Magics):
             put timestamps before each input line logged (these are put in
             comments).
 
-          -q 
+          -q
             suppress output of logstate message when logging is invoked
         """
 

@@ -207,7 +207,7 @@ def _function_magic_marker(magic_kind):
     """Decorator factory for standalone functions.
     """
     validate_type(magic_kind)
-    
+
     # This is a closure to capture the magic_kind.  We could also use a class,
     # but it's overkill for just that one bit of state.
     def magic_deco(arg):
@@ -252,7 +252,7 @@ def _function_magic_marker(magic_kind):
     fully up and running.  Any file located in the `startup` subdirectory of
     your configuration profile will be OK in this sense.
     """)
-    
+
     magic_deco.__doc__ = ds
     return magic_deco
 
@@ -353,7 +353,7 @@ class MagicsManager(Configurable):
     @observe('auto_magic')
     def _auto_magic_changed(self, change):
         self.shell.automagic = change['new']
-    
+
     _auto_status = [
         'Automagic is OFF, % prefix IS needed for line magics.',
         'Automagic is ON, % prefix IS NOT needed for line magics.']
@@ -372,7 +372,7 @@ class MagicsManager(Configurable):
     def auto_status(self):
         """Return descriptive string with automagic status."""
         return self._auto_status[self.auto_magic]
-    
+
     def lsmagic(self):
         """Return a dict of currently available magic functions.
 

@@ -69,7 +69,7 @@ def issues_closed_since(period=timedelta(days=365), project="ipython/ipython", p
         since = period
     url = "https://api.github.com/repos/%s/%s?state=closed&sort=updated&since=%s&per_page=%i" % (project, which, since.strftime(ISO8601), PER_PAGE)
     allclosed = get_paged_request(url, headers=make_auth_header())
-    
+
     filtered = [ i for i in allclosed if _parse_datetime(i['closed_at']) > since ]
     if pulls:
         filtered = [ i for i in filtered if _parse_datetime(i['merged_at']) > since ]
@@ -77,7 +77,7 @@ def issues_closed_since(period=timedelta(days=365), project="ipython/ipython", p
         filtered = [i for i in filtered if i["base"]["ref"] == "main"]
     else:
         filtered = [ i for i in filtered if not is_pull_request(i) ]
-    
+
     return filtered
 
 

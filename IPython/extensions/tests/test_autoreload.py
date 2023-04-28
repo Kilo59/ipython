@@ -222,7 +222,7 @@ class TestAutoreload(Fixture):
 
                                     def __init__(self, a=10):
                                         self.a = a
-                                        self.b = 22 
+                                        self.b = 22
                                         # self.toto = 33
 
                                     def square(self):

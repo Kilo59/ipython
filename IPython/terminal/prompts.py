@@ -103,6 +103,5 @@ class RichPromptDisplayHook(DisplayHook):
                 if mime in format_dict:
                     handler(format_dict[mime], None)
                     return
-                
-        super().write_format_data(format_dict, md_dict)
 
+        super().write_format_data(format_dict, md_dict)

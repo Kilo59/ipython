@@ -32,15 +32,15 @@ This is an handy alias to `ipython history trim --keep=0`
 
 class HistoryTrim(BaseIPythonApplication):
     description = trim_hist_help
-    
+
     backup = Bool(False,
         help="Keep the old history file as history.sqlite.<N>"
         ).tag(config=True)
-    
+
     keep = Int(1000,
         help="Number of recent lines to keep in the database."
         ).tag(config=True)
-    
+
     flags = Dict(dict(
         backup = ({'HistoryTrim' : {'backup' : True}},
             backup.help
@@ -50,7 +50,7 @@ class HistoryTrim(BaseIPythonApplication):
     aliases=Dict(dict(
         keep = 'HistoryTrim.keep'
     ))
-    
+
     def start(self):
         profile_dir = Path(self.profile_dir.location)
         hist_file = profile_dir / "history.sqlite"
@@ -121,11 +121,11 @@ class HistoryClear(HistoryTrim):
     description = clear_hist_help
     keep = Int(0,
         help="Number of recent lines to keep in the database.")
-    
+
     force = Bool(False,
         help="Don't prompt user for confirmation"
         ).tag(config=True)
-    
+
     flags = Dict(dict(
         force = ({'HistoryClear' : {'force' : True}},
             force.help),

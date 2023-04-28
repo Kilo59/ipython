@@ -368,4 +368,3 @@ class Struct(dict):
                 self[key] = data_dict[key]
             else:
                 self[key] = conflict_solve[key](self[key],data_dict[key])
-

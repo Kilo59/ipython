@@ -623,11 +623,11 @@ code snippet::
   a = 42
   IPython.embed()
 
-and within the IPython shell, you reassign `a` to `23` to do further testing of 
+and within the IPython shell, you reassign `a` to `23` to do further testing of
 some sort, you can then exit::
 
   >>> IPython.embed()
-  Python 3.6.2 (default, Jul 17 2017, 16:44:45) 
+  Python 3.6.2 (default, Jul 17 2017, 16:44:45)
   Type 'copyright', 'credits' or 'license' for more information
   IPython 6.2.0.dev -- An enhanced Interactive Python. Type '?' for help.
 
@@ -641,9 +641,9 @@ Once you exit and print `a`, the value 23 will be shown::
   In: print(a)
   23
 
-It's important to note that the code run in the embedded IPython shell will 
-*not* change the state of your code and variables, **unless** the shell is 
-contained within the global namespace. In the above example, `a` is changed 
+It's important to note that the code run in the embedded IPython shell will
+*not* change the state of your code and variables, **unless** the shell is
+contained within the global namespace. In the above example, `a` is changed
 because this is true.
 
 To further exemplify this, consider the following example::
@@ -657,7 +657,7 @@ To further exemplify this, consider the following example::
 
 Now if call the function and complete the state changes as we did above, the
 value `42` will be printed. Again, this is because it's not in the global
-namespace:: 
+namespace::
 
   do()
 
@@ -665,7 +665,7 @@ Running a file with the above code can lead to the following session::
 
   >>> do()
   42
-  Python 3.6.2 (default, Jul 17 2017, 16:44:45) 
+  Python 3.6.2 (default, Jul 17 2017, 16:44:45)
   Type 'copyright', 'credits' or 'license' for more information
   IPython 6.2.0.dev -- An enhanced Interactive Python. Type '?' for help.
 

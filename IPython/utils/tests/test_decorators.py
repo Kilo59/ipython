@@ -4,7 +4,7 @@ def test_flag_calls():
     @decorators.flag_calls
     def f():
         pass
-    
+
     assert not f.called
     f()
     assert f.called

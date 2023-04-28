@@ -33,17 +33,17 @@ class Macro(object):
         if isinstance(code, bytes):
             code = code.decode(enc or DEFAULT_ENCODING)
         self.value = code + '\n'
-    
+
     def __str__(self):
         return self.value
 
     def __repr__(self):
         return f'IPython.macro.Macro({repr(self.value)})'
-    
+
     def __getstate__(self):
         """ needed for safe pickling via %store """
         return {'value': self.value}
-    
+
     def __add__(self, other):
         if isinstance(other, Macro):
             return Macro(self.value + other.value)

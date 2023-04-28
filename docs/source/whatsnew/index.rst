@@ -19,7 +19,7 @@ What's new in IPython
 .. only:: ipydev
 
    Development version in-progress features:
-   
+
    .. toctree::
 
       development
@@ -64,7 +64,7 @@ development work they do here in a user friendly format.
    this makes a hidden toctree that keeps sphinx from complaining about
    documents included nowhere when building docs for stable
    We place it at the end as it will still be reachable via prev/next links.
-   
+
 .. only:: ipystable
 
    .. toctree::

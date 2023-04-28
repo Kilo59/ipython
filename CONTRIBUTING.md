@@ -9,7 +9,7 @@ To close an issue (or PR), even if you did not create it, use the following:
 > @meeseeksdev close
 
 This command can be in the middle of another comment, but must start on its
-own line. 
+own line.
 
 To add labels to an issue, ask the bot to `tag` with a comma-separated list of
 tags to add:

@@ -168,7 +168,7 @@ def test_bad_module_all():
 def test_module_without_init():
     """
     Test module without __init__.py.
-    
+
     https://github.com/ipython/ipython/issues/11226
     """
     fake_module_name = "foo"

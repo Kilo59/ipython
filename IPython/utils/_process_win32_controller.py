@@ -209,7 +209,7 @@ class Win32ShellCommandController(object):
             else:
                 time.sleep(0.01)
                 return None
-      
+
         with ShellCommandController('python -i') as scc:
             scc.run(my_stdout_func, my_stdin_func)
     """

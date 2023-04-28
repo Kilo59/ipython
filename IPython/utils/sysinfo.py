@@ -104,7 +104,7 @@ def sys_info():
     Examples
     --------
     ::
-    
+
         In [2]: print(sys_info())
         {'commit_hash': '144fdae',      # random
          'commit_source': 'repository',

@@ -73,7 +73,7 @@ else:
         This just returns process_time() and zero."""
         return time.process_time(), 0.0
 
-    
+
 def timings_out(reps,func,*args,**kw):
     """timings_out(reps,func,*args,**kw) -> (t_total,t_per_call,output)
 
@@ -117,4 +117,3 @@ def timing(func,*args,**kw):
     seconds. This is just the first value in timings_out()."""
 
     return timings_out(1,func,*args,**kw)[0]
-

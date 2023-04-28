@@ -13,7 +13,7 @@ class C(object):
         self.name = name
         self.p = print
         self.flush_stdout = sys.stdout.flush
-        
+
     def __del__(self):
         self.p('tclass.py: deleting object:',self.name)
         self.flush_stdout()

@@ -288,7 +288,7 @@ class InteractiveShellEmbed(TerminalInteractiveShell):
             the shell was called.
 
         """
-        
+
         # Get locals and globals from caller
         if ((local_ns is None or module is None or compile_flags is None)
             and self.default_user_namespaces):
@@ -310,7 +310,7 @@ class InteractiveShellEmbed(TerminalInteractiveShell):
                 compile_flags = (call_frame.f_code.co_flags &
                                  compilerop.PyCF_MASK)
 
-        # Save original namespace and module so we can restore them after 
+        # Save original namespace and module so we can restore them after
         # embedding; otherwise the shell doesn't shut down correctly.
         orig_user_module = self.user_module
         orig_user_ns = self.user_ns

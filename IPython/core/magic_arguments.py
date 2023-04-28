@@ -27,12 +27,12 @@ arguments::
 
     In[1]: %cool?
         %cool [-o OPTION] arg
-        
+
         A really cool magic command.
-        
+
         positional arguments:
           arg                   An integer positional argument.
-        
+
         optional arguments:
           -o OPTION, --option OPTION
                                 An optional argument.

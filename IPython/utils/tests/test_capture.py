@@ -72,7 +72,7 @@ def test_rich_output_empty(method_mime):
     rich = capture.RichOutput()
     method, mime = method_mime
     assert getattr(rich, method)() is None
-    
+
 def test_rich_output():
     """test RichOutput basics"""
     data = basic_data

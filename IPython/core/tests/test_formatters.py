@@ -103,7 +103,7 @@ def test_bad_precision():
 
 def test_for_type():
     f = PlainTextFormatter()
-    
+
     # initial return, None
     assert f.for_type(C, foo_printer) is None
     # no func queries
@@ -130,9 +130,9 @@ def test_for_type_string():
 
 def test_for_type_by_name():
     f = PlainTextFormatter()
-    
+
     mod = C.__module__
-    
+
     # initial return, None
     assert f.for_type_by_name(mod, "C", foo_printer) is None
     # no func queries
@@ -146,7 +146,7 @@ def test_for_type_by_name():
 
 def test_lookup():
     f = PlainTextFormatter()
-    
+
     f.for_type(C, foo_printer)
     assert f.lookup(C()) is foo_printer
     with pytest.raises(KeyError):
@@ -238,7 +238,7 @@ def test_pop_string():
     with pytest.raises(KeyError):
         f.pop(type_str)
     assert f.pop(type_str, None) is None
-    
+
 
 def test_error_method():
     f = HTMLFormatter()
@@ -341,14 +341,14 @@ def test_print_method_weird():
     assert text_hat._repr_html_ == "_repr_html_"
     with capture_output() as captured:
         result = f(text_hat)
-    
+
     assert result is None
     assert "FormatterWarning" not in captured.stderr
 
     class CallableMagicHat(object):
         def __getattr__(self, key):
             return lambda : key
-    
+
     call_hat = CallableMagicHat()
     with capture_output() as captured:
         result = f(call_hat)
@@ -358,11 +358,11 @@ def test_print_method_weird():
     class BadReprArgs(object):
         def _repr_html_(self, extra, args):
             return "html"
-    
+
     bad = BadReprArgs()
     with capture_output() as captured:
         result = f(bad)
-    
+
     assert result is None
     assert "FormatterWarning" not in captured.stderr
 
@@ -444,7 +444,7 @@ def test_repr_mime():
             return 'should-be-overwritten'
         def _repr_html_(self):
             return '<b>hi!</b>'
-    
+
     f = get_ipython().display_formatter
     html_f = f.formatters['text/html']
     save_enabled = html_f.enabled
@@ -507,7 +507,7 @@ def test_repr_mime_meta():
                 }
             }
             return (data, metadata)
-    
+
     f = get_ipython().display_formatter
     obj = HasReprMimeMeta()
     d, md = f.format(obj)

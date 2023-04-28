@@ -295,7 +295,7 @@ class InputSplitter(object):
     """
     # A cache for storing the current indentation
     # The first value stores the most recently processed source input
-    # The second value is the number of spaces for the current indentation 
+    # The second value is the number of spaces for the current indentation
     # If self.source matches the first value, the second value is a valid
     # current indentation. Otherwise, the cache is invalid and the indentation
     # must be recalculated.
@@ -464,20 +464,20 @@ class InputSplitter(object):
         if not self._is_complete:
             #print("Not complete")  # debug
             return True
-        
+
         # The user can make any (complete) input execute by leaving a blank line
         last_line = self.source.splitlines()[-1]
         if (not last_line) or last_line.isspace():
             #print("Blank line")  # debug
             return False
-        
+
         # If there's just a single line or AST node, and we're flush left, as is
         # the case after a simple statement such as 'a=1', we want to execute it
         # straight away.
         if self.get_indent_spaces() == 0:
             if len(self.source.splitlines()) <= 1:
                 return False
-            
+
             try:
                 code_ast = ast.parse("".join(self._buffer))
             except Exception:
@@ -531,11 +531,11 @@ class IPythonInputSplitter(InputSplitter):
 
     # String with raw, untransformed input.
     source_raw = ''
-    
+
     # Flag to track when a transformer has stored input that it hasn't given
     # back yet.
     transformer_accumulating = False
-    
+
     # Flag to track when assemble_python_lines has stored input that it hasn't
     # given back yet.
     within_python_line = False
@@ -550,7 +550,7 @@ class IPythonInputSplitter(InputSplitter):
         super(IPythonInputSplitter, self).__init__()
         self._buffer_raw = []
         self._validate = True
-        
+
         if physical_line_transforms is not None:
             self.physical_line_transforms = physical_line_transforms
         else:
@@ -560,7 +560,7 @@ class IPythonInputSplitter(InputSplitter):
                                              ipy_prompt(),
                                              cellmagic(end_on_blank_line=line_input_checker),
                                             ]
-        
+
         self.assemble_logical_lines = assemble_logical_lines()
         if logical_line_transforms is not None:
             self.logical_line_transforms = logical_line_transforms
@@ -571,21 +571,21 @@ class IPythonInputSplitter(InputSplitter):
                                             assign_from_magic(),
                                             assign_from_system(),
                                            ]
-        
+
         self.assemble_python_lines = assemble_python_lines()
         if python_line_transforms is not None:
             self.python_line_transforms = python_line_transforms
         else:
             # We don't use any of these at present
             self.python_line_transforms = []
-    
+
     @property
     def transforms(self):
         "Quick access to all transformers."
         return self.physical_line_transforms + \
             [self.assemble_logical_lines] + self.logical_line_transforms + \
             [self.assemble_python_lines]  + self.python_line_transforms
-    
+
     @property
     def transforms_in_use(self):
         """Transformers, excluding logical line transformers if we're in a
@@ -610,7 +610,7 @@ class IPythonInputSplitter(InputSplitter):
                 # Nothing that calls reset() expects to handle transformer
                 # errors
                 pass
-    
+
     def flush_transformers(self):
         def _flush(transform, outs):
             """yield transformed lines
@@ -628,16 +628,16 @@ class IPythonInputSplitter(InputSplitter):
                     tmp = transform.push(line)
                     if tmp is not None:
                         yield tmp
-            
+
             # reset the transform
             tmp = transform.reset()
             if tmp is not None:
                 yield tmp
-        
+
         out = []
         for t in self.transforms_in_use:
             out = _flush(t, out)
-        
+
         out = list(out)
         if out:
             self._store('\n'.join(out))
@@ -648,7 +648,7 @@ class IPythonInputSplitter(InputSplitter):
         out = self.source_raw
         self.reset()
         return out
-    
+
     def source_reset(self):
         try:
             self.flush_transformers()
@@ -765,4 +765,3 @@ class IPythonInputSplitter(InputSplitter):
         #print("transformers clear") #debug
         self.transformer_accumulating = False
         return line
-

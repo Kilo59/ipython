@@ -253,8 +253,8 @@ class IPythonConsoleLexer(Lexer):
     #    continuation = '   .D.: '
     #    template     = 'Out[#]: '
     #
-    # Where '#' is the 'prompt number' or 'execution count' and 'D' 
-    # D is a number of dots  matching the width of the execution count 
+    # Where '#' is the 'prompt number' or 'execution count' and 'D'
+    # D is a number of dots  matching the width of the execution count
     #
     in1_regex = r'In \[[0-9]+\]: '
     in2_regex = r'   \.\.+\.: '
@@ -522,4 +522,3 @@ class IPyLexer(Lexer):
         else:
             lex = self.IPythonLexer
         yield from lex.get_tokens_unprocessed(text)
-

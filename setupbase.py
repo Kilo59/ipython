@@ -336,4 +336,3 @@ def git_prebuild(pkg_dir, build_cmd=build_py):
 
 
     return MyBuildPy
-

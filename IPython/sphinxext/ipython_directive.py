@@ -174,7 +174,7 @@ To Do
 
 # Authors
 # =======
-# 
+#
 # - John D Hunter: original author.
 # - Fernando Perez: refactoring, documentation, cleanups, port to 0.11.
 # - VáclavŠmilauer <eudoxos-AT-arcig.cz>: Prompt generalizations.
@@ -419,7 +419,7 @@ class EmbeddedSphinxShell(object):
         source_dir = self.source_dir
         saveargs = decorator.split(' ')
         filename = saveargs[1]
-        # insert relative path to image file in source 
+        # insert relative path to image file in source
         # as absolute path for Sphinx
         # sphinx expects a posix path, even on Windows
         path = pathlib.Path(savefig_dir, filename)

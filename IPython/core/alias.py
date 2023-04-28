@@ -152,7 +152,7 @@ class Alias(object):
                                     "got: %r" % self.cmd)
 
         nargs = self.cmd.count('%s') - self.cmd.count('%%s')
-  
+
         if (nargs > 0) and (self.cmd.find('%l') >= 0):
             raise InvalidAliasError('The %s and %l specifiers are mutually '
                                     'exclusive in alias definitions.')

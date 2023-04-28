@@ -119,12 +119,12 @@ def list_bundled_profiles():
 
 class ProfileLocate(BaseIPythonApplication):
     description = """print the path to an IPython profile dir"""
-    
+
     def parse_command_line(self, argv=None):
         super(ProfileLocate, self).parse_command_line(argv)
         if self.extra_args:
             self.profile = self.extra_args[0]
-    
+
     def start(self):
         print(self.profile_dir.location)
 
@@ -238,7 +238,7 @@ class ProfileCreate(BaseIPythonApplication):
     flags = Dict(create_flags)
 
     classes = [ProfileDir]
-    
+
     def _import_app(self, app_path):
         """import an app class"""
         app = None

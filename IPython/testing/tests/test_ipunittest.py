@@ -66,8 +66,8 @@ In [20]: print(1)
 
 In [26]: for i in range(4):
    ....:     print(i)
-   ....:     
-   ....: 
+   ....:
+   ....:
 0
 1
 2
@@ -86,8 +86,8 @@ def ipdt_indented_test():
 
     In [26]: for i in range(4):
        ....:     print(i)
-       ....:     
-       ....: 
+       ....:
+       ....:
     0
     1
     2
@@ -113,8 +113,8 @@ class Foo(object):
 
         In [26]: for i in range(4):
            ....:     print(i)
-           ....:     
-           ....: 
+           ....:
+           ....:
         0
         1
         2
